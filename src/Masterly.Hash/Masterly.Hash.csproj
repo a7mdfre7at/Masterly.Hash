@@ -12,7 +12,7 @@
     <PackageTags>Security;Hash;Text;Password;Salt;Crypto</PackageTags>
     <PackageReadmeFile>README.nuget.md</PackageReadmeFile>
     <PackageIcon>repo_image.png</PackageIcon>
-    <PackageLicenseFile>C:\Users\ahmad\source\repos\Masterly.Hash\LICENSE.txt</PackageLicenseFile>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
   </PropertyGroup>
 
   <ItemGroup>
