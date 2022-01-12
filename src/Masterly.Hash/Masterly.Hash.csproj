@@ -1,0 +1,45 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Version>1.0.0</Version>
+    <Authors>Ahmad Omar Al-Freihat</Authors>
+    <Description>A tool for text hashing with random or defined salt, and verfiy it by extracting the salt from hashed text, then hash the plain text with the extracted salt and match it with the original hashed text.
+</Description>
+    <PackageProjectUrl></PackageProjectUrl>
+    <RepositoryUrl>https://github.com/a7mdfre7at/Masterly.Hash</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>Security;Hash;Text;Password;Salt;Crypto</PackageTags>
+    <PackageReadmeFile>README.nuget.md</PackageReadmeFile>
+    <PackageIcon>repo_image.png</PackageIcon>
+    <PackageLicenseFile>C:\Users\ahmad\source\repos\Masterly.Hash\LICENSE.txt</PackageLicenseFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.nuget.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+      <Visible>False</Visible>
+    </None>
+    <None Include="..\..\repo_image.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+      <Visible>False</Visible>
+    </None>
+    <None Include="..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+      <Visible>False</Visible>
+    </None>
+    <None Include="..\..\LICENSE.txt">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+      <Visible>False</Visible>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Masterly.DependencyInjection.Abstraction" Version="1.0.1" />
+  </ItemGroup>
+
+</Project>
