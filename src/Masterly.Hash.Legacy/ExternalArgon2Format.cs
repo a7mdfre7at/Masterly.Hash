@@ -7,7 +7,7 @@ namespace Masterly.Hash.Legacy
     /// <summary>
     /// Argon2 PHC strings produced by other systems (libsodium, argon2-cffi, PHP <c>password_hash</c>,
     /// node-argon2, Spring Security, ...): <c>$argon2id$v=19$m=65536,t=3,p=4$&lt;salt&gt;$&lt;hash&gt;</c>, also
-    /// <c>$argon2i$</c> and <c>$argon2d$</c>. Verified with Konscious.Security.Cryptography.Argon2.
+    /// <c>$argon2i$</c> and <c>$argon2d$</c>. Computed by the core package's own Argon2 (RFC 9106), on the calling thread.
     /// </summary>
     /// <remarks>
     /// <para>
@@ -100,19 +100,14 @@ namespace Masterly.Hash.Legacy
             byte[] actual;
             try
             {
-                using (Konscious.Security.Cryptography.Argon2 argon2 = Create(parsed.Variant, plain))
-                {
-                    argon2.Salt = parsed.Salt;
-                    argon2.MemorySize = parsed.MemoryKiB;
-                    argon2.Iterations = parsed.Iterations;
-                    argon2.DegreeOfParallelism = parsed.Parallelism;
-                    actual = argon2.GetBytes(parsed.Hash.Length);
-                }
+                // Runs on the calling thread, so it cannot starve the thread pool behind the hasher's concurrency gate.
+                actual = HashPrimitives.Argon2(
+                    ToPrimitive(parsed.Variant), plain, parsed.Salt,
+                    parsed.MemoryKiB, parsed.Iterations, parsed.Parallelism, parsed.Hash.Length);
             }
             catch (Exception ex) when (IsOutOfMemory(ex))
             {
                 // The m KiB block allocation failed: report a non-match rather than break "Verify never throws".
-                // Konscious blocks on a Task internally, so the failure usually arrives wrapped in an AggregateException.
                 return false;
             }
             finally
@@ -203,13 +198,13 @@ namespace Masterly.Hash.Legacy
             return pair.StartsWith(name, StringComparison.Ordinal) && LegacyEncoding.TryParseDecimal(pair.Substring(name.Length), out value);
         }
 
-        private static Konscious.Security.Cryptography.Argon2 Create(Variant variant, byte[] password)
+        private static Argon2Variant ToPrimitive(Variant variant)
         {
             switch (variant)
             {
-                case Variant.Argon2i: return new Konscious.Security.Cryptography.Argon2i(password);
-                case Variant.Argon2d: return new Konscious.Security.Cryptography.Argon2d(password);
-                default: return new Konscious.Security.Cryptography.Argon2id(password);
+                case Variant.Argon2i: return Argon2Variant.Argon2i;
+                case Variant.Argon2d: return Argon2Variant.Argon2d;
+                default: return Argon2Variant.Argon2id;
             }
         }
 

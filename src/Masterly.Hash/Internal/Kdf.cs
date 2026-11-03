@@ -10,14 +10,10 @@ namespace Masterly.Hash.Internal
             switch (profile.Algorithm)
             {
                 case HashAlgorithmKind.Argon2id:
-                    using (var argon2 = new Konscious.Security.Cryptography.Argon2id(input))
-                    {
-                        argon2.Salt = salt;
-                        argon2.MemorySize = profile.MemoryKiB;
-                        argon2.Iterations = profile.Iterations;
-                        argon2.DegreeOfParallelism = profile.Parallelism;
-                        return argon2.GetBytes(profile.TagLength);
-                    }
+                    // Runs on the calling thread: PasswordHasher holds a concurrency slot around this call.
+                    return Argon2Core.Derive(
+                        Argon2Type.Argon2id, input, salt, default, default,
+                        profile.MemoryKiB, profile.Iterations, profile.Parallelism, profile.TagLength);
 
                 case HashAlgorithmKind.Pbkdf2Sha512:
                     return Pbkdf2.Derive(HashAlgorithmName.SHA512, input, salt, profile.Iterations, profile.TagLength);

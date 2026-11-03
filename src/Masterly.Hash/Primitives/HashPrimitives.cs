@@ -74,6 +74,37 @@ namespace Masterly.Hash.Primitives
         }
 
         /// <summary>
+        /// Argon2 version 0x13 (RFC 9106) with explicit parameters, for verifying hashes from other systems. Runs
+        /// entirely on the calling thread and bypasses the hasher's concurrency limit.
+        /// </summary>
+        /// <param name="variant">Argon2d, Argon2i or Argon2id.</param>
+        /// <param name="password">The password bytes (may be empty).</param>
+        /// <param name="salt">At least 8 bytes.</param>
+        /// <param name="memoryKiB">Memory cost <c>m</c>: from <c>8 * parallelism</c> to <see cref="HashProfile.MaxMemoryKiB"/>.</param>
+        /// <param name="iterations">Time cost <c>t</c>: 1 to 64.</param>
+        /// <param name="parallelism">Lanes <c>p</c>: 1 to 16. Lanes are computed one after another on the calling thread.</param>
+        /// <param name="tagLength">Output length: 4 to 1024 bytes.</param>
+        /// <returns>The tag.</returns>
+        /// <exception cref="OutOfMemoryException">The <paramref name="memoryKiB"/> KiB block matrix could not be allocated.</exception>
+        public static byte[] Argon2(Argon2Variant variant, byte[] password, byte[] salt, int memoryKiB, int iterations, int parallelism, int tagLength)
+        {
+            if (password == null) throw new ArgumentNullException(nameof(password));
+            if (salt == null) throw new ArgumentNullException(nameof(salt));
+            if (variant != Argon2Variant.Argon2d && variant != Argon2Variant.Argon2i && variant != Argon2Variant.Argon2id)
+                throw new ArgumentOutOfRangeException(nameof(variant), variant, "Unknown Argon2 variant.");
+            if (salt.Length < 8 || salt.Length > 1024) throw new ArgumentException("Salt must be 8 to 1024 bytes.", nameof(salt));
+            if (parallelism < 1 || parallelism > 16)
+                throw new ArgumentOutOfRangeException(nameof(parallelism), parallelism, "Parallelism must be between 1 and 16.");
+            if (memoryKiB < 8 * parallelism || memoryKiB > HashProfile.MaxMemoryKiB)
+                throw new ArgumentOutOfRangeException(nameof(memoryKiB), memoryKiB, $"Memory must be between {8 * parallelism} and {HashProfile.MaxMemoryKiB} KiB.");
+            if (iterations < 1 || iterations > 64)
+                throw new ArgumentOutOfRangeException(nameof(iterations), iterations, "Iterations must be between 1 and 64.");
+            if (tagLength < 4 || tagLength > 1024)
+                throw new ArgumentOutOfRangeException(nameof(tagLength), tagLength, "Tag length must be between 4 and 1024 bytes.");
+            return Argon2Core.Derive((Argon2Type)variant, password, salt, default, default, memoryKiB, iterations, parallelism, tagLength);
+        }
+
+        /// <summary>
         /// The exact bytes the hasher feeds to the KDF for a password: UTF-8 of the NFKC-normalized string
         /// (NIST SP 800-63B). Throws <see cref="ArgumentException"/> if the string contains an unpaired surrogate.
         /// </summary>

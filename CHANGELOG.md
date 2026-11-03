@@ -19,7 +19,8 @@ A ground-up rewrite. 1.x hashes keep verifying and are upgraded automatically; s
 - `ILegacyHashFormat`, onion wrapping (`TryWrap`), and `Inspect` / `NeedsRehash`.
 - `SensitiveString` for request models, which redacts in `ToString`, the debugger and JSON.
 - A `System.Diagnostics.Metrics` meter, `Masterly.Hash`.
-- `HashPrimitives`, shared low-level building blocks.
+- `HashPrimitives`, shared low-level building blocks, including `HashPrimitives.Argon2` (Argon2d, Argon2i and Argon2id with explicit parameters).
+- Argon2 is implemented inside the package (RFC 9106, version 0x13), checked against the RFC test vectors and byte-for-byte against the reference implementation. Every lane runs on the calling thread, so a flood of logins waiting at the concurrency gate cannot starve the thread pool. The core package has no third-party dependencies.
 - Targets `net8.0` and is AOT-compatible.
 
 ### Added: satellite packages
@@ -62,11 +63,11 @@ AMD Ryzen 9 7950X, .NET 10, single thread, median of 15 runs:
 
 | Profile | Hash | Verify | Allocated |
 |---|---:|---:|---:|
-| 2026a | 170.6 ms | 176.9 ms | 64.3 MiB |
-| 2026c | 35.1 ms | 33.1 ms | 19.2 MiB |
-| 2026f | 80.2 ms | 81.5 ms | <0.1 MiB |
+| 2026a | 125.6 ms | 130.1 ms | 64.0 MiB |
+| 2026c | 26.3 ms | 26.6 ms | 19.0 MiB |
+| 2026f | 81.3 ms | 83.6 ms | <0.1 MiB |
 
-A 1.x hash verifies in 5.4 µs, or 184 ms including its rehash to `2026a`. `HmacPepper` adds 0.7 µs.
+A 1.x hash verifies in 6.3 µs, or 128 ms including its rehash to `2026a`. `HmacPepper` adds 0.6 µs.
 
 ## [1.0.0] - 2021
 

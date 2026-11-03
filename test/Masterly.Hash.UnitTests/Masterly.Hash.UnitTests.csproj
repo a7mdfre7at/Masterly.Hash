@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Konscious.Security.Cryptography.Argon2" Version="1.3.1" />
     <ProjectReference Include="..\..\src\Masterly.Hash\Masterly.Hash.csproj" />
   </ItemGroup>
 

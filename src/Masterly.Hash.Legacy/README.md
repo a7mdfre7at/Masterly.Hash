@@ -18,7 +18,7 @@ log in.
 | `AspNetIdentityV2Format` | `aspnet-identity-v2` | ASP.NET Identity 2 / MVC 5 (`AA…`) | yes |
 | `UnsaltedDigestFormat.Md5`/`.Sha1`/`.Sha256`/`.Sha512` | `md5`, `sha1`, `sha256`, `sha512` | hex of `H(password)` | yes |
 
-It targets `net8.0` and depends on BCrypt.Net-Next and Konscious.Security.Cryptography.Argon2.
+It targets `net8.0` and depends on BCrypt.Net-Next. Argon2 PHC hashes are verified by the core package's own Argon2 implementation.
 
 ## Install
 
