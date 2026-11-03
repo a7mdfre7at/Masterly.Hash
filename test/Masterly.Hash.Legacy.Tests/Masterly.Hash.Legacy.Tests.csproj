@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <!-- Test-only: Microsoft's PasswordHasher<TUser> is the reference for the ASP.NET Identity differential tests. -->
+    <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="10.0.14" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!--
+      Caps the test host's GC heap at 1 GiB so ExternalArgon2Format's OutOfMemoryException handling can be tested
+      deterministically (MutationTests.Argon2_allocation_failure_is_a_non_match_not_an_exception): a 1 GiB Argon2
+      block array can never fit, and the failed allocation consumes nothing, so other tests are unaffected.
+    -->
+    <RuntimeHostConfigurationOption Include="System.GC.HeapHardLimit" Value="1073741824" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Masterly.Hash.Legacy\Masterly.Hash.Legacy.csproj" />
+  </ItemGroup>
+
+</Project>

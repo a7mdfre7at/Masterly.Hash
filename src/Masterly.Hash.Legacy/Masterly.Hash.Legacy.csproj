@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Description>Universal hash migrator for Masterly.Hash: verify bcrypt, ASP.NET Core Identity (v2/v3), Django PBKDF2, phpass (WordPress/phpBB), unsalted MD5/SHA digests and external Argon2 PHC hashes, upgrade them to Argon2id on login, onion-wrap weak hashes offline, and audit a password table.</Description>
+    <PackageTags>Security;Hash;Password;Migration;Legacy;bcrypt;Argon2;PBKDF2;phpass;WordPress;Django;AspNetIdentity;PasswordHashing</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.2.1" />
+    <PackageReference Include="Konscious.Security.Cryptography.Argon2" Version="1.3.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Masterly.Hash\Masterly.Hash.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Masterly.Hash.Legacy.Tests" />
+  </ItemGroup>
+
+</Project>
