@@ -1,0 +1,103 @@
+.grid {
+  display: grid;
+  gap: 0.75rem;
+  margin: 1.25rem 0 2rem;
+  padding: 0;
+  list-style: none;
+}
+
+.columns2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.columns3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.item {
+  margin: 0;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--mh-border);
+  border-radius: var(--mh-radius);
+  background: var(--mh-surface-raised);
+  color: inherit;
+  transition: border-color var(--mh-duration) var(--mh-ease), box-shadow var(--mh-duration) var(--mh-ease),
+    transform var(--mh-duration) var(--mh-ease);
+}
+
+.card:hover {
+  border-color: var(--ifm-color-primary);
+  box-shadow: var(--mh-shadow-md);
+  color: inherit;
+  text-decoration: none;
+  transform: translateY(-2px);
+}
+
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  margin-bottom: 0.75rem;
+  border-radius: 8px;
+  background: var(--mh-accent-soft);
+  color: var(--ifm-color-primary);
+}
+
+.eyebrow {
+  margin-bottom: 0.25rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--mh-ink-faint);
+}
+
+.title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 0.3rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--mh-ink);
+}
+
+.arrow {
+  color: var(--ifm-color-primary);
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: opacity var(--mh-duration) var(--mh-ease), transform var(--mh-duration) var(--mh-ease);
+}
+
+.card:hover .arrow,
+.card:focus-visible .arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.text {
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: var(--mh-ink-muted);
+}
+
+@media (max-width: 996px) {
+  .columns3 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .columns2,
+  .columns3 {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

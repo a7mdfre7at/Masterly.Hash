@@ -364,3 +364,15 @@ FodyWeavers.xsd
 # Coverage and mutation-testing output
 TestResults/
 StrykerOutput/
+
+# crew plugin — per-developer state
+.claude/state/
+.claude/worktrees/
+docs/runs/runs.jsonl
+docs/runs/.pending/
+
+# Documentation site (website/): dependencies and generated output
+website/node_modules/
+website/build/
+website/.docusaurus/
+website/.cache-loader/

@@ -24,7 +24,7 @@ This is the primary threat. A backup leaks, SQL injection dumps the users table,
 | Honeywords [Detection] | A cracked hash usually yields a decoy. A login with a decoy alerts the separate honeychecker that the database leaked. |
 | Breach and policy checks [Policy, Pwned] | They remove the passwords that are tried first. No hash function protects `123456`. |
 
-**Residual risk.** A weak password, an unpeppered hash and a determined attacker together still mean the password gets cracked eventually. The [playground](playground/index.html) shows roughly how long that takes.
+**Residual risk.** A weak password, an unpeppered hash and a determined attacker together still mean the password gets cracked eventually. The [playground](https://a7mdfre7at.github.io/Masterly.Hash/playground/) shows roughly how long that takes.
 
 ### A2: an attacker who can write to the hash column
 

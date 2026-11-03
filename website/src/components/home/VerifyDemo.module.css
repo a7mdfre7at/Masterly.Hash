@@ -1,0 +1,259 @@
+.window {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--mh-border-strong);
+  border-radius: var(--mh-radius-lg);
+  background: var(--mh-code-bg);
+  box-shadow: var(--mh-shadow-lg);
+  text-align: left;
+}
+
+[data-theme='dark'] .window {
+  box-shadow: var(--mh-shadow-lg), 0 0 0 1px rgba(198, 136, 252, 0.05), 0 30px 80px -30px rgba(130, 23, 211, 0.55);
+}
+
+.titleBar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.55rem 0.65rem 0.55rem 1rem;
+  border-bottom: 1px solid var(--mh-border);
+  background: var(--mh-surface);
+}
+
+.dots {
+  display: inline-flex;
+  gap: 6px;
+}
+
+.dots span {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--mh-border-strong);
+}
+
+.fileName {
+  flex: 1;
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.78rem;
+  color: var(--mh-ink-muted);
+}
+
+.scenarios {
+  display: inline-flex;
+  padding: 2px;
+  border: 1px solid var(--mh-border);
+  border-radius: 8px;
+  background: var(--mh-surface-sunken);
+}
+
+.scenario {
+  min-height: 1.75rem;
+  padding: 0 0.6rem;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--mh-ink-faint);
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.74rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background var(--mh-duration) var(--mh-ease), color var(--mh-duration) var(--mh-ease);
+}
+
+.scenario:hover {
+  color: var(--mh-ink);
+}
+
+.scenarioActive,
+.scenarioActive:hover {
+  background: var(--mh-surface-raised);
+  color: var(--mh-ink);
+  box-shadow: var(--mh-shadow-sm), inset 0 0 0 1px var(--mh-border-strong);
+}
+
+.runButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 2rem;
+  padding: 0.25rem 0.75rem;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  background: var(--mh-accent);
+  color: var(--mh-accent-ink);
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: opacity var(--mh-duration) var(--mh-ease), transform var(--mh-duration) var(--mh-ease);
+}
+
+.runButton:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.runButton:disabled {
+  cursor: progress;
+  opacity: 0.6;
+}
+
+.code {
+  margin: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.code pre {
+  border-radius: 0;
+  background: transparent !important;
+}
+
+.code code {
+  font-size: 0.8rem;
+}
+
+.console {
+  border-top: 1px solid var(--mh-border);
+  background: var(--mh-console-bg);
+}
+
+.consoleHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.6rem 1rem 0;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--mh-ink-faint);
+}
+
+.status {
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.statusPass {
+  color: var(--mh-pass);
+  font-weight: 600;
+}
+
+.fields {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  column-gap: 1.25rem;
+  row-gap: 0.15rem;
+  margin: 0;
+  padding: 0.6rem 1rem 0.95rem;
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.8rem;
+  line-height: 1.85;
+}
+
+.field {
+  display: contents;
+}
+
+.fieldName {
+  margin: 0;
+  font-weight: 400;
+  color: var(--mh-ink-faint);
+}
+
+.fieldValue {
+  min-width: 0;
+  margin: 0;
+}
+
+.value {
+  display: inline-block;
+  padding: 0 0.45rem;
+  border-radius: 5px;
+  font-weight: 600;
+  animation: fadeIn 250ms var(--mh-ease);
+}
+
+.neutral {
+  background: var(--mh-accent-soft);
+  color: var(--ifm-color-primary);
+}
+
+.pass {
+  background: var(--mh-pass-soft);
+  color: var(--mh-pass);
+}
+
+.warn {
+  background: var(--mh-warn-soft);
+  color: var(--mh-warn);
+}
+
+.placeholder {
+  color: var(--mh-ink-faint);
+}
+
+.pulsing {
+  animation: pulse 1s var(--mh-ease) infinite;
+}
+
+.rehashField .fieldName {
+  align-self: start;
+}
+
+/* The format line is never displayed below 13 px (BRAND.md). */
+.rehash {
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.6;
+  padding-top: 0.15rem;
+  color: var(--mh-ink);
+  overflow-wrap: anywhere;
+}
+
+.rehashVisible {
+  animation: fadeIn 300ms var(--mh-ease);
+}
+
+.delimiter {
+  color: var(--ifm-color-primary);
+  font-weight: 600;
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.35;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-4px);
+  }
+}
+
+@media (max-width: 560px) {
+  .dots,
+  .fileName {
+    display: none;
+  }
+
+  .titleBar {
+    justify-content: space-between;
+  }
+
+  .fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .fieldName {
+    margin-top: 0.35rem;
+  }
+}
