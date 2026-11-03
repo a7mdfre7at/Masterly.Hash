@@ -5,6 +5,8 @@
 
 **Password hashing you can't get wrong.** It takes two methods, the defaults are safe, and every hash you already have upgrades itself the next time its user logs in.
 
+**📖 Documentation: [a7mdfre7at.github.io/Masterly.Hash](https://a7mdfre7at.github.io/Masterly.Hash/)** · [Quick start](https://a7mdfre7at.github.io/Masterly.Hash/docs/quick-start) · [API reference](https://a7mdfre7at.github.io/Masterly.Hash/docs/api-reference) · [Examples](https://a7mdfre7at.github.io/Masterly.Hash/docs/examples)
+
 [![Nuget](https://img.shields.io/nuget/v/Masterly.Hash?style=flat-square)](https://www.nuget.org/packages/Masterly.Hash) [![Documentation](https://img.shields.io/badge/docs-masterly.hash-8217D3?style=flat-square)](https://a7mdfre7at.github.io/Masterly.Hash/) ![Nuget](https://img.shields.io/nuget/dt/Masterly.Hash?style=flat-square) ![GitHub](https://img.shields.io/github/license/a7mdfre7at/Masterly.Hash?style=flat-square) [![Build](https://github.com/a7mdfre7at/Masterly.Hash/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/a7mdfre7at/Masterly.Hash/actions/workflows/build.yml) [![CodeQL](https://github.com/a7mdfre7at/Masterly.Hash/actions/workflows/codeql.yml/badge.svg?branch=master)](https://github.com/a7mdfre7at/Masterly.Hash/actions/workflows/codeql.yml) [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/a7mdfre7at/Masterly.Hash/badge)](https://securityscorecards.dev/viewer/?uri=github.com/a7mdfre7at/Masterly.Hash)
 
 ```
