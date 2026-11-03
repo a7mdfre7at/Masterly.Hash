@@ -1,46 +1,216 @@
 name: Publish to NuGet
-on:
-  push:
-    branches:
-      - master # Your default release branch
-    paths:
-      - 'src/Masterly.Hash/**'
-  workflow_run:
-    workflows: ["Build"]
-    branches: [master]
-    types: 
-      - completed
-jobs:
-  on-success:
-    name: List Masterly.Hash on nuget.org
-    runs-on: windows-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
-    steps:
-      - uses: actions/checkout@v2
 
-      # Required for a specific dotnet version that doesn't come with ubuntu-latest / windows-latest
-      # Visit bit.ly/2synnZl to see the list of SDKs that are pre-installed with ubuntu-latest / windows-latest
-      - name: Setup dotnet
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: '6.0.x'
-      
-      # Publish
-      - name: publish on version change
-        uses: rohith/publish-nuget@v2
-        with:
-          PROJECT_FILE_PATH: src/Masterly.Hash/Masterly.Hash.csproj # Relative to repository root
-          # VERSION_FILE_PATH: Directory.Build.props # Filepath with version info, relative to repository root. Defaults to project file
-          VERSION_REGEX: <Version>(.*)<\/Version> # Regex pattern to extract version info in a capturing group
-          TAG_COMMIT: true # Flag to enable / disable git tagging
-          TAG_FORMAT: Masterly.Hash-v* # Format of the git tag, [*] gets replaced with version
-          NUGET_KEY: ${{secrets.NUGET_API_KEY}} # nuget.org API key
-  
-  on-failure:
-    runs-on: windows-latest
-    name: Publish Failed
-    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: [Build]
+    branches: [master]
+    types: [completed]
+
+# Two publish runs never overlap, so package pushes and the GitHub Release cannot race. A run that has started is
+# never cancelled: a half-finished push is repaired only by a later complete run. GitHub replaces a run that is still
+# queued when a newer one arrives, which is safe because the newer run publishes the newer commit.
+concurrency:
+  group: publish-nuget
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  NUGET_SOURCE: https://api.nuget.org/v3/index.json
+  # The nuget.org profile that owns the packages and the Trusted Publishing policy (a profile name, never an email).
+  NUGET_USER: a7mdfre7at
+  PACKAGE_OUTPUT: artifacts/packages
+  # The core package is pushed first, so a sibling never reaches nuget.org without the core version it depends on.
+  CORE_PACKAGE_ID: Masterly.Hash
+
+jobs:
+  publish:
+    name: Publish to NuGet
+    runs-on: ubuntu-latest
+    # Only a successful Build of a push to master publishes: a pull_request Build (including one from a fork's own
+    # 'master' branch) never gets to exchange an OIDC token for a NuGet API key. A manual run publishes only from
+    # master, and runs the tests itself.
+    if: ${{ (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/master') || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push' && github.event.workflow_run.head_branch == 'master') }}
+    permissions:
+      contents: write
+      # Trusted Publishing: the job presents a GitHub OIDC token to nuget.org, which exchanges it for a one-hour API
+      # key under the nuget.org policy (owner a7mdfre7at, repository Masterly.Hash, workflow publish.yml).
+      # No long-lived NuGet API key is stored in the repository secrets. The same token signs the build provenance.
+      id-token: write
+      attestations: write
+    env:
+      # The commit the triggering Build tested; a manual run publishes the commit it was started on.
+      PUBLISH_SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
+
     steps:
-      - run: |
-            echo "This workflow has been canceled because of build or test failed" 
+      - name: Checkout the tested commit
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ env.PUBLISH_SHA }}
+
+      # The same SDKs as build.yml: the libraries target net8.0 and the solution builds with the .NET 10 SDK.
+      - name: Setup .NET
+        uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73 # v6.1.0
+        with:
+          dotnet-version: |
+            8.0.x
+            10.0.x
+
+      - name: Cache NuGet packages
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj', '**/Directory.Build.props', '**/Directory.Build.targets') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      # The shared version lives in the root Directory.Build.props so every packable project
+      # under src/ ships with the same version number.
+      - name: Read version from Directory.Build.props
+        id: version
+        shell: bash
+        run: |
+          set -euo pipefail
+          VERSION="$(sed -n 's/.*<Version>\(.*\)<\/Version>.*/\1/p' Directory.Build.props | head -n 1 | tr -d '[:space:]')"
+          if [ -z "$VERSION" ]; then
+            echo "::error::No <Version> element found in Directory.Build.props."
             exit 1
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Resolved package version: $VERSION"
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      # The whole solution, as the Build workflow built and tested it.
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
+
+      # A workflow_run publish follows a green Build of this exact commit; a manual run has no such Build, so it tests here.
+      - name: Test (manual run only)
+        if: github.event_name == 'workflow_dispatch'
+        run: dotnet test Masterly.Hash.sln --configuration Release --no-build
+
+      # Only the projects under src/ ship (src/Directory.Build.props makes them packable); projects that set
+      # IsPackable=false produce nothing. Each package gets a sibling .snupkg symbol package.
+      - name: Pack all packable projects under src/
+        shell: bash
+        run: |
+          set -euo pipefail
+          for project in src/*/*.csproj; do
+            echo "Packing $project"
+            dotnet pack "$project" --configuration Release --no-build --output "$PACKAGE_OUTPUT"
+          done
+          echo "Packages produced:"
+          ls -1 "$PACKAGE_OUTPUT"/*.nupkg "$PACKAGE_OUTPUT"/*.snupkg
+
+      - name: Generate SBOM
+        uses: anchore/sbom-action@66cbf4bc1f1c0d2edc94016e65bc221b6bb0ad6c # v0.24.3
+        with:
+          path: .
+          format: spdx-json
+          output-file: artifacts/masterly-hash-${{ steps.version.outputs.version }}.spdx.json
+          upload-artifact: false
+          upload-release-assets: false
+
+      - name: Attest build provenance
+        uses: actions/attest-build-provenance@e8998f949152b193b063cb0ec769d69d929409be # v2.4.0
+        with:
+          subject-path: ${{ env.PACKAGE_OUTPUT }}/*.nupkg
+
+      # Requested right before the push: the temporary key lives one hour and each OIDC token buys exactly one key.
+      - name: Get a temporary NuGet API key (Trusted Publishing)
+        id: nuget-login
+        uses: NuGet/login@8d196754b4036150537f80ac539e15c2f1028841 # v1.2.0
+        with:
+          user: ${{ env.NUGET_USER }}
+
+      # Core first, then the siblings in sorted order, one push each. Pushing a .nupkg also pushes the .snupkg next to
+      # it, so the symbol packages are not listed separately (the *.nupkg glob does not match *.snupkg).
+      # --skip-duplicate makes a re-run after a partial failure push only what is missing.
+      - name: Push packages to NuGet
+        shell: bash
+        env:
+          NUGET_API_KEY: ${{ steps.nuget-login.outputs.NUGET_API_KEY }}
+        run: |
+          set -euo pipefail
+          VERSION="${{ steps.version.outputs.version }}"
+          CORE_PACKAGE="$PACKAGE_OUTPUT/$CORE_PACKAGE_ID.$VERSION.nupkg"
+          if [ ! -f "$CORE_PACKAGE" ]; then
+            echo "::error::Core package $CORE_PACKAGE was not produced."
+            exit 1
+          fi
+          PUSH_LIST=("$CORE_PACKAGE")
+          while IFS= read -r package; do
+            if [ "$package" != "$CORE_PACKAGE" ]; then
+              PUSH_LIST+=("$package")
+            fi
+          done < <(printf '%s\n' "$PACKAGE_OUTPUT"/*.nupkg | LC_ALL=C sort)
+          echo "Push order:"
+          printf '  %s\n' "${PUSH_LIST[@]}"
+          for package in "${PUSH_LIST[@]}"; do
+            dotnet nuget push "$package" \
+              --api-key "$NUGET_API_KEY" \
+              --source "$NUGET_SOURCE" \
+              --skip-duplicate
+          done
+
+      # The release body is only this version's CHANGELOG section, not the whole history.
+      - name: Extract this version's release notes
+        shell: bash
+        run: |
+          set -euo pipefail
+          VERSION="${{ steps.version.outputs.version }}"
+          # The section heading is dropped (the release title already names the version), as are leading blank lines.
+          awk -v version="$VERSION" '/^## \[/{ if (f) exit; if (index($0, "## [" version "]") == 1) { f=1; next } } f' CHANGELOG.md \
+            | sed '/./,$!d' > release-notes.md
+          if [ ! -s release-notes.md ]; then
+            echo "::error::CHANGELOG.md has no '## [$VERSION]' section."
+            exit 1
+          fi
+
+      # Idempotent: creates the release when it does not exist, otherwise uploads only the assets it is missing (an
+      # earlier run that failed mid-upload). Existing assets are never replaced, so a later commit at the same version
+      # cannot swap the released packages for different builds.
+      - name: Create or complete the GitHub Release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          VERSION="${{ steps.version.outputs.version }}"
+          TAG="v$VERSION"
+          ASSETS=("$PACKAGE_OUTPUT"/*.nupkg "$PACKAGE_OUTPUT"/*.snupkg "artifacts/masterly-hash-$VERSION.spdx.json")
+          if gh release view "$TAG" > /dev/null 2>&1; then
+            EXISTING="$(gh release view "$TAG" --json assets --jq '.assets[].name')"
+            MISSING=()
+            for asset in "${ASSETS[@]}"; do
+              if ! grep -Fxq -- "$(basename "$asset")" <<< "$EXISTING"; then
+                MISSING+=("$asset")
+              fi
+            done
+            if [ "${#MISSING[@]}" -eq 0 ]; then
+              echo "Release $TAG already has every asset; nothing to do."
+            else
+              echo "Release $TAG exists; uploading ${#MISSING[@]} missing asset(s)."
+              gh release upload "$TAG" "${MISSING[@]}"
+            fi
+          else
+            gh release create "$TAG" "${ASSETS[@]}" \
+              --title "Masterly.Hash $VERSION" \
+              --notes-file release-notes.md \
+              --target "$PUBLISH_SHA"
+          fi
+
+  on-failure:
+    name: Build Failed
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'failure' && github.event.workflow_run.event == 'push' }}
+    steps:
+      - name: Report failure
+        run: |
+          echo "::error::Build workflow failed. NuGet publish skipped."
+          exit 1

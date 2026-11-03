@@ -1,41 +1,61 @@
 name: Build
 
 on:
-  workflow_dispatch:
-    branches: [ master ]
   push:
     branches: [ master ]
   pull_request:
     branches: [ master ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   build:
-    runs-on: windows-latest
+    name: Build and test (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
+    runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v1
-      with:
-          dotnet-version: '6.0.x'
+      - uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73 # v6.1.0
+        with:
+          dotnet-version: |
+            8.0.x
+            10.0.x
 
-    - name: Install dependencies
-      run: dotnet restore
+      - name: Restore
+        run: dotnet restore
 
-    - name: Build
-      run: dotnet build --configuration Release --no-restore
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
 
-    - name: Test
-      run: dotnet test --no-restore --verbosity normal
+      - name: Test
+        run: dotnet test --configuration Release --no-build --logger trx --results-directory TestResults --collect "XPlat Code Coverage"
 
-    - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
-      with:
-        tag_name: v1.0.0
-        release_name: Release v1.0.0
-        body_path: CHANGELOG.md
-        draft: false
-        prerelease: false
+      # Merges every test project's report; fails the build if coverage drops below the floor.
+      - name: Coverage gate
+        if: matrix.os == 'ubuntu-latest'
+        run: python3 eng/coverage.py TestResults --min-line 98.5 --min-branch 97 | tee -a "$GITHUB_STEP_SUMMARY"; exit ${PIPESTATUS[0]}
+        shell: bash
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: test-results-${{ matrix.os }}
+          path: TestResults
+
+      - name: Pack
+        if: matrix.os == 'ubuntu-latest'
+        run: dotnet pack --configuration Release --no-build --output artifacts
+
+      - name: Upload packages
+        if: matrix.os == 'ubuntu-latest'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: packages
+          path: artifacts/*
