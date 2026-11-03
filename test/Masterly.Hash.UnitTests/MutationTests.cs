@@ -633,10 +633,13 @@ public class AsyncContextTests
         });
     }
 
+    // The timeout is only a hang guard: these tests release the gate themselves. It must outlast the thread-pool
+    // injection delay of a loaded CI runner, or a sync waiter gives up before the async call it is compared with
+    // has even started (seen on a 2-core Windows runner at 5 s). The busy path is tested with its own 1 ms timeout.
     private static PasswordHasher GatedHasher(BlockingFormat blocker) => TestHashers.Create(o =>
     {
         o.MaxConcurrency = 1;
-        o.ConcurrencyTimeout = TimeSpan.FromSeconds(5);
+        o.ConcurrencyTimeout = Generous;
         o.LegacyFormats.Add(blocker);
     });
 
