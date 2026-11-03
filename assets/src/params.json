@@ -1,0 +1,90 @@
+{
+ "master": {
+  "t": 56,
+  "tv": 50,
+  "s": 0.18,
+  "gap": 258,
+  "k": 112,
+  "arm": 56,
+  "apexDY": 28
+ },
+ "favicon": {
+  "t": 50,
+  "tv": 42,
+  "s": 0.16,
+  "gap": 272,
+  "k": 116,
+  "arm": 50,
+  "apexDY": 25
+ },
+ "color": {
+  "brand": "#8217D3",
+  "brandDark": "#C688FC",
+  "grad0": "#9C3CF0",
+  "grad1": "#5410A6",
+  "light": {
+   "panel": "#F8F6FD",
+   "stroke": "#E7DFF5",
+   "word": "#16112A",
+   "tag": "#4E4A66",
+   "code": "#5F5A7E",
+   "block": "#8217D3"
+  },
+  "dark": {
+   "panel": "#13111F",
+   "stroke": "#2A2342",
+   "word": "#F3F0FA",
+   "tag": "#B4AFCB",
+   "code": "#A29DBF",
+   "block": "#C688FC"
+  }
+ },
+ "icon": {
+  "rx": 112,
+  "scale": 0.8
+ },
+ "faviconTile": {
+  "rx": 112,
+  "scale": 0.76
+ },
+ "banner": {
+  "rx": 24,
+  "mark": 214,
+  "mx": 76,
+  "tx": 326,
+  "wsize": 92,
+  "wls": -0.02,
+  "kern": -2,
+  "wy": 144,
+  "tsize": 32,
+  "ty": 196,
+  "csize": 26,
+  "cy": 244,
+  "code": "$mh$p=2026a$Ksl8yFv2Qe…$tQ4nRZw9…",
+  "my": 53,
+  "lx": 990,
+  "ly": 87
+ },
+ "social": {
+  "wsize": 120,
+  "tsize": 42,
+  "tagDy": 69,
+  "tagDx": 5,
+  "csize": 30,
+  "ruleGap": 88,
+  "codeGap": 68
+ },
+ "pixel": {
+  "breakpoint": 20
+ },
+ "hint32": {
+  "y": [
+   112,
+   144,
+   176,
+   336,
+   368,
+   400
+  ]
+ }
+}
