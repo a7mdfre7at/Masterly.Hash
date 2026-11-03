@@ -4,7 +4,7 @@ sidebar_label: "User Enumeration"
 description: "Use VerifyOrDummy so that a login for an unknown account takes as long as one for a real account."
 ---
 
-If your login endpoint answers faster for an unknown email address than for a real one, an attacker can find out which accounts exist by timing it. The usual cause is that the server skips the password hash when it finds no user, and a `2026a` hash takes about 170 ms. This page shows how `VerifyOrDummy` removes that difference, and which other differences remain for you to handle.
+If your login endpoint answers faster for an unknown email address than for a real one, an attacker can find out which accounts exist by timing it. The usual cause is that the server skips the password hash when it finds no user, and a `2026a` hash takes about 125 ms. This page shows how `VerifyOrDummy` removes that difference, and which other differences remain for you to handle.
 
 ## Use VerifyOrDummy
 

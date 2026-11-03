@@ -12,7 +12,7 @@ Masterly.Hash is a password-hashing library for .NET 8 and later. You call `Pass
 
 Every hash you already have keeps working. Hashes from Masterly.Hash 1.x verify out of the box, and the `Masterly.Hash.Legacy` package adds bcrypt, ASP.NET Identity, Django, phpass, raw MD5 and SHA digests and external Argon2 hashes. When an old hash verifies, the result carries a fresh Argon2id replacement, so your table upgrades itself as users log in.
 
-The core package targets `net8.0` and depends only on Konscious.Security.Cryptography.Argon2 for the Argon2id implementation. Seventeen optional packages add dependency injection, ASP.NET Core Identity, Entity Framework Core, remote peppers, password policy, tokens, blind indexes, integrity hashing, attack detection, analyzers, a command-line tool and test helpers. All 18 packages ship with the same version number.
+The core package targets `net8.0` and has no third-party dependencies: Argon2id is implemented inside the package. Seventeen optional packages add dependency injection, ASP.NET Core Identity, Entity Framework Core, remote peppers, password policy, tokens, blind indexes, integrity hashing, attack detection, analyzers, a command-line tool and test helpers. All 18 packages ship with the same version number.
 
 ## How it works
 

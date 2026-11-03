@@ -62,7 +62,8 @@ The core package: hashing, verification, profiles, peppers and the 1.x legacy fo
 
 | Type or member | Purpose |
 |----------------|---------|
-| `HashPrimitives` | Building blocks for custom schemes: `FixedTimeEquals`, `IsWellFormedPassword`, `IsValidProfileId`, `IsValidKeyId`, `IsValidFormatId`, `Zero`, `RandomBytes`, `Pbkdf2(prf, password, salt, iterations, length)`, `DeriveKey(profile, input, salt)`, `EncodePassword` (UTF-8 of NFKC), `ToB64`, `TryFromB64`. |
+| `HashPrimitives` | Building blocks for custom schemes: `FixedTimeEquals`, `IsWellFormedPassword`, `IsValidProfileId`, `IsValidKeyId`, `IsValidFormatId`, `Zero`, `RandomBytes`, `Argon2(variant, password, salt, memoryKiB, iterations, parallelism, tagLength)`, `Pbkdf2(prf, password, salt, iterations, length)`, `DeriveKey(profile, input, salt)`, `EncodePassword` (UTF-8 of NFKC), `ToB64`, `TryFromB64`. |
+| `Argon2Variant` | `Argon2d`, `Argon2i`, `Argon2id`: the variant for `HashPrimitives.Argon2`. |
 
 **Obsolete 1.x API**
 

@@ -42,15 +42,15 @@ Median of 15 runs on an AMD Ryzen 9 7950X with .NET 10, single thread (from the 
 
 | Profile | Hash | Verify | Allocated per call |
 |---|---:|---:|---:|
-| `2026a` | 170.6 ms | 176.9 ms | 64.3 MiB |
-| `2026c` | 35.1 ms | 33.1 ms | 19.2 MiB |
-| `2026f` | 80.2 ms | 81.5 ms | less than 0.1 MiB |
+| `2026a` | 125.6 ms | 130.1 ms | 64.0 MiB |
+| `2026c` | 26.3 ms | 26.6 ms | 19.0 MiB |
+| `2026f` | 81.3 ms | 83.6 ms | less than 0.1 MiB |
 
 Your hardware will differ. Run `masterly-hash bench` to time the three profiles on the machine that will serve logins. It recommends `Server2026a` when `2026a` fits the target (250 ms by default, change it with `--target-ms`) and `Constrained2026a` otherwise. See [Command-line tool](./command-line-tool.md) and [Performance](./performance.md).
 
 ## Choosing a profile
 
-**Use `2026a` unless you have a reason not to.** It is the default, so you do not need to configure anything. It costs an attacker about 170 ms of CPU time and 64 MiB of memory per guess, and memory-hardness limits how many guesses a GPU or ASIC can run in parallel.
+**Use `2026a` unless you have a reason not to.** It is the default, so you do not need to configure anything. It costs an attacker about 125 ms of CPU time and 64 MiB of memory per guess, and memory-hardness limits how many guesses a GPU or ASIC can run in parallel.
 
 **Use `2026c` when memory is tight.** Serverless functions and small containers often cannot spend 64 MiB per login, multiplied by the number of logins in flight. `2026c` still meets the OWASP minimum. Lower [`MaxConcurrency`](./limits-and-concurrency.md#the-concurrency-gate) is the other lever: it caps how many derivations run at once, so it caps peak memory without weakening each hash.
 

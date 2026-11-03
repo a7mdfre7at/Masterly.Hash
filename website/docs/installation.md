@@ -30,7 +30,7 @@ The test suite runs on .NET 10, and CI builds with the .NET 8 and .NET 10 SDKs. 
 
 :::note
 
-The core package depends on `Konscious.Security.Cryptography.Argon2` 1.3.1, a fully managed Argon2 implementation. There is no native library to deploy, so the same package works on Windows, Linux, macOS, in containers and in serverless functions.
+The core package has no third-party dependencies: Argon2 is implemented inside the package (RFC 9106, fully managed, checked against the RFC test vectors and the reference implementation) and runs on the calling thread. There is no native library to deploy, so the same package works on Windows, Linux, macOS, in containers and in serverless functions.
 
 :::
 
@@ -40,8 +40,8 @@ The core package depends on `Konscious.Security.Cryptography.Argon2` 1.3.1, a fu
 
 | Package | What it is for | Extra dependencies |
 |---------|----------------|--------------------|
-| `Masterly.Hash` | The core: `Password` and `PasswordHasher`, dated profiles (Argon2id and PBKDF2-HMAC-SHA512), upgrade-on-login, constant-time verification, `VerifyOrDummy`, the local `HmacPepper`, the 1.x format, onion wrapping, `SensitiveString` and metrics. | `Konscious.Security.Cryptography.Argon2` 1.3.1 |
-| `Masterly.Hash.Legacy` | Verifies hashes from other systems and upgrades them on login: bcrypt, ASP.NET Core Identity v2 and v3, Django PBKDF2, phpass (WordPress, phpBB), unsalted MD5 and SHA digests, and external Argon2 PHC strings. Wraps weak hashes offline and audits a password table (`HashAudit`). | `BCrypt.Net-Next` 4.2.1, `Konscious.Security.Cryptography.Argon2` 1.3.1 |
+| `Masterly.Hash` | The core: `Password` and `PasswordHasher`, dated profiles (Argon2id and PBKDF2-HMAC-SHA512), upgrade-on-login, constant-time verification, `VerifyOrDummy`, the local `HmacPepper`, the 1.x format, onion wrapping, `SensitiveString` and metrics. | none |
+| `Masterly.Hash.Legacy` | Verifies hashes from other systems and upgrades them on login: bcrypt, ASP.NET Core Identity v2 and v3, Django PBKDF2, phpass (WordPress, phpBB), unsalted MD5 and SHA digests, and external Argon2 PHC strings. Wraps weak hashes offline and audits a password table (`HashAudit`). | `BCrypt.Net-Next` 4.2.1 |
 
 ### Integrations
 

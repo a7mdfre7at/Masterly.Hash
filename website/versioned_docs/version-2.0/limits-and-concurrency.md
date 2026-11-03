@@ -4,7 +4,7 @@ sidebar_label: "Limits and Concurrency"
 description: "Cap password length and parallel hashing so a login flood cannot exhaust memory, and answer overload with 503."
 ---
 
-Password hashing is expensive on purpose: one `2026a` hash takes about 170 ms of CPU and 64 MiB of memory. That cost protects stored hashes, but it also means a flood of login requests, or a few enormous passwords, can take a server down. Masterly.Hash has two guards against this: a cap on password length and a cap on how many hashes run at once. This page explains both, their defaults, and how to size them.
+Password hashing is expensive on purpose: one `2026a` hash takes about 125 ms of CPU and 64 MiB of memory. That cost protects stored hashes, but it also means a flood of login requests, or a few enormous passwords, can take a server down. Masterly.Hash has two guards against this: a cap on password length and a cap on how many hashes run at once. This page explains both, their defaults, and how to size them.
 
 ## Defaults
 

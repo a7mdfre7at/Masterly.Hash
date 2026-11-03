@@ -250,7 +250,7 @@ Do not write new 1.x hashes. Every one you create needs migrating again.
 
 ## Timing note
 
-Verifying a 1.x hash takes microseconds (5.4 µs measured), while Argon2id takes about 170 ms. Response time therefore reveals which accounts still hold a 1.x hash. Wrapping (Step 5) removes that signal and the cracking exposure at the same time.
+Verifying a 1.x hash takes microseconds (6.3 µs measured), while Argon2id takes about 125 ms. Response time therefore reveals which accounts still hold a 1.x hash. Wrapping (Step 5) removes that signal and the cracking exposure at the same time.
 
 ## Checklist
 

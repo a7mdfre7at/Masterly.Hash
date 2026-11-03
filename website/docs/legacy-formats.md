@@ -14,7 +14,7 @@ Legacy formats only ever **verify**. Nothing in `Masterly.Hash.Legacy` creates a
 dotnet add package Masterly.Hash.Legacy
 ```
 
-The package targets `net8.0` and depends on `Masterly.Hash`, BCrypt.Net-Next and Konscious.Security.Cryptography.Argon2.
+The package targets `net8.0` and depends on `Masterly.Hash` and BCrypt.Net-Next. Argon2 PHC hashes are verified by the core package's own Argon2 implementation.
 
 ## Register the formats
 
@@ -360,7 +360,7 @@ Register it like a built-in format: `options.AddLegacyFormats(new SaltedSha256Fo
 
 ## Security notes
 
-- **Weak formats verify fast.** An MD5, phpass or 1.x hash verifies in microseconds, while Argon2id takes about 170 ms. Response time can reveal which accounts still hold a legacy hash. [Onion wrapping](./onion-wrapping.md) removes the signal.
+- **Weak formats verify fast.** An MD5, phpass or 1.x hash verifies in microseconds, while Argon2id takes about 125 ms. Response time can reveal which accounts still hold a legacy hash. [Onion wrapping](./onion-wrapping.md) removes the signal.
 - **Strict parsing.** Strings are parsed strictly: canonical base64, exact lengths, decimal numbers without leading zeros. Garbage and truncated values are rejected without throwing.
 - **Constant-time comparisons.** Every format compares digests in constant time and zeroes the buffers that held password bytes or digests.
 - **A writable users table is out of scope.** The cost caps limit the work a tampered row can force, but an attacker who can write rows can simply replace a hash with one for a password they know. See the [Threat Model](./threat-model.md).

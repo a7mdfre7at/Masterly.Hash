@@ -341,6 +341,7 @@ public sealed record LoginRequest(string Email, SensitiveString Password);
 |--------|--------------|
 | `FixedTimeEquals(byte[], byte[])`, `FixedTimeEquals(ReadOnlySpan<byte>, ReadOnlySpan<byte>)` | Compares in time that depends only on the lengths. |
 | `DeriveKey(HashProfile, byte[] input, byte[] salt)` | Runs a profile's KDF with an explicit salt. Bypasses the concurrency limit, the pepper and the format. Input must be non-empty; salt at least 8 bytes. |
+| `Argon2(Argon2Variant, byte[] password, byte[] salt, int memoryKiB, int iterations, int parallelism, int tagLength)` | Argon2d, Argon2i or Argon2id (RFC 9106, version 0x13) with explicit parameters, for hashes made by other systems. Runs on the calling thread and bypasses the concurrency limit, the pepper and the format. Salt 8 to 1024 bytes, memory 8 × parallelism to 1,048,576 KiB, iterations 1 to 64, parallelism 1 to 16, tag 4 to 1024 bytes. |
 | `EncodePassword(string)` | The exact bytes the hasher feeds the KDF: UTF-8 of the NFKC-normalized password. Throws `ArgumentException` for invalid input. |
 | `IsWellFormedPassword(string)` | `true` if the hasher accepts the string: no unpaired surrogates and normalizable by NFKC. |
 | `Pbkdf2(HashAlgorithmName, byte[], byte[], int, int)` | PBKDF2 with HMAC-SHA1, HMAC-SHA256 or HMAC-SHA512. Other PRFs throw `ArgumentOutOfRangeException`. |

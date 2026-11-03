@@ -4,7 +4,7 @@ sidebar_label: "Testing"
 description: "A real but fast hasher, a call recorder, a deterministic fake pepper, framework-agnostic assertions and known sample hashes."
 ---
 
-`Masterly.Hash.Testing` gives you what you need to unit-test code that hashes and verifies passwords, without paying the production cost on every call (about 170 ms per `2026a` hash on a fast desktop CPU) and without mocking the hasher. This page shows each helper and the tests it makes easy: upgrade-on-login, unknown users, pepper rotation, pepper outages and leaked plaintext.
+`Masterly.Hash.Testing` gives you what you need to unit-test code that hashes and verifies passwords, without paying the production cost on every call (about 125 ms per `2026a` hash on a fast desktop CPU) and without mocking the hasher. This page shows each helper and the tests it makes easy: upgrade-on-login, unknown users, pepper rotation, pepper outages and leaked plaintext.
 
 | Helper | What it does |
 |--------|--------------|

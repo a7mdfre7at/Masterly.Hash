@@ -12,17 +12,17 @@ The published numbers come from the benchmark suite's quick mode on an AMD Ryzen
 
 | Profile | Algorithm | Parameters | Hash | Verify | Allocated per call |
 |---------|-----------|------------|-----:|-------:|-------------------:|
-| `2026a` (`HashProfile.Server2026a`, default) | Argon2id | m=64 MiB, t=3, p=1 | 170.6 ms | 176.9 ms | 64.3 MiB |
-| `2026c` (`HashProfile.Constrained2026a`) | Argon2id | m=19 MiB, t=2, p=1 | 35.1 ms | 33.1 ms | 19.2 MiB |
-| `2026f` (`HashProfile.Fips2026a`) | PBKDF2-HMAC-SHA512 | 210,000 iterations | 80.2 ms | 81.5 ms | under 0.1 MiB |
+| `2026a` (`HashProfile.Server2026a`, default) | Argon2id | m=64 MiB, t=3, p=1 | 125.6 ms | 130.1 ms | 64.0 MiB |
+| `2026c` (`HashProfile.Constrained2026a`) | Argon2id | m=19 MiB, t=2, p=1 | 26.3 ms | 26.6 ms | 19.0 MiB |
+| `2026f` (`HashProfile.Fips2026a`) | PBKDF2-HMAC-SHA512 | 210,000 iterations | 81.3 ms | 83.6 ms | under 0.1 MiB |
 
 Other operations, from the same run:
 
 | Operation | Cost |
 |-----------|------|
-| Verify a Masterly.Hash 1.x hash (salted SHA-512) | 5.4 µs |
-| Verify a 1.x hash including its rehash to `2026a` (the first login after upgrading) | 184 ms |
-| `HmacPepper.Apply` (one HMAC-SHA256) | 0.7 µs |
+| Verify a Masterly.Hash 1.x hash (salted SHA-512) | 6.3 µs |
+| Verify a 1.x hash including its rehash to `2026a` (the first login after upgrading) | 128 ms |
+| `HmacPepper.Apply` (one HMAC-SHA256) | 0.6 µs |
 
 Your hardware will differ: cloud vCPUs are often much slower per thread than a desktop CPU. Measure on the machines that will serve logins; see [Choosing a profile](#choosing-a-profile).
 
@@ -114,7 +114,7 @@ Map the busy exception to `503 Service Unavailable` so clients back off instead 
 
 ## Costs you might not expect
 
-- **The first login after an upgrade costs two operations.** Verifying a legacy or outdated hash and producing its replacement means a legacy verify plus a new hash: for a 1.x hash, 5.4 µs plus about 180 ms for `2026a`. If many users return at once after a migration, expect a burst of full-cost hashes. `ComputeRehashOnVerify = false` skips computing the replacement during verification (then `Rehash` is `null` and your code must hash the password itself), which moves the cost but does not remove it.
+- **The first login after an upgrade costs two operations.** Verifying a legacy or outdated hash and producing its replacement means a legacy verify plus a new hash: for a 1.x hash, 6.3 µs plus about 130 ms for `2026a`. If many users return at once after a migration, expect a burst of full-cost hashes. `ComputeRehashOnVerify = false` skips computing the replacement during verification (then `Rehash` is `null` and your code must hash the password itself), which moves the cost but does not remove it.
 - **Unknown users cost a full verification.** `VerifyOrDummy` with a `null` stored hash verifies against a dummy hash, so a login for an account that does not exist takes as long as one that does. That is the point (see [User enumeration](./user-enumeration.md)); budget for it when sizing against credential-stuffing traffic. The `VerifyOrDummyBenchmarks` ratio should be close to 1.00.
 - **Onion wrapping a table is offline work.** Wrapping costs one full hash per row. At 171 ms per `2026a` hash, a million rows is about 47 hours of single-core time, or about six hours with 8 hashes in parallel. Plan it as a batch job; see [Onion wrapping](./onion-wrapping.md).
 - **Tests do not need the real cost.** Use `FastPasswordHasher` from `Masterly.Hash.Testing`, which runs the production code path with a 64 KiB profile. See [Testing](./testing.md).

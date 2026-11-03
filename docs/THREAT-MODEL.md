@@ -17,7 +17,7 @@ This is the primary threat. A backup leaks, SQL injection dumps the users table,
 
 | Defense | Effect |
 |---|---|
-| Argon2id, m=64 MiB, t=3 (`2026a`) | Each guess costs about 170 ms of CPU time and 64 MiB of memory. Memory-hardness limits GPU and ASIC parallelism (RFC 9106). |
+| Argon2id, m=64 MiB, t=3 (`2026a`) | Each guess costs about 125 ms of CPU time and 64 MiB of memory. Memory-hardness limits GPU and ASIC parallelism (RFC 9106). |
 | 16-byte random salt per hash | No rainbow tables. Every user must be attacked separately. |
 | Pepper (`HmacPepper`, or [Pepper.HashiCorpVault] / [Pepper.AwsKms], where the key never leaves the service) | Without the pepper key, the leaked hashes cannot be tested at all. |
 | Onion wrapping (`TryWrap`, `masterly-hash wrap`) | Legacy fast hashes are protected **today**, not only after each user logs in again. |

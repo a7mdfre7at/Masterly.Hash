@@ -212,7 +212,7 @@ As with plain legacy hashes, the legacy digest is computed from the raw UTF-8 pa
 
 ## Costs and limits
 
-**Time.** A wrapped login costs the legacy digest plus one KDF run with the profile, about 170 ms for `2026a`. A bcrypt or PBKDF2 digest adds its own cost on top. Wrapping a hash costs one KDF run.
+**Time.** A wrapped login costs the legacy digest plus one KDF run with the profile, about 125 ms for `2026a`. A bcrypt or PBKDF2 digest adds its own cost on top. Wrapping a hash costs one KDF run.
 
 **Memory and concurrency.** Each wrap allocates the profile's memory (64 MiB for `2026a`) and takes a slot of the hasher's concurrency gate. If no slot frees within `ConcurrencyTimeout` (default 30 seconds), `TryWrap` throws `PasswordHasherBusyException`. Run a large job in its own process, or give it its own hasher, so it does not compete with logins.
 

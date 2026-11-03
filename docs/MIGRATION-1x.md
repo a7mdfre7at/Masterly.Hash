@@ -79,4 +79,4 @@ If your 1.x code used more than one algorithm, wrap only the rows you know. The 
 
 ## Timing note
 
-Verifying a 1.x hash takes microseconds, while Argon2id takes about 170 ms. Response time therefore reveals which accounts still hold a legacy hash. Wrapping (step 3) removes that signal and the cracking exposure at the same time.
+Verifying a 1.x hash takes microseconds, while Argon2id takes about 125 ms. Response time therefore reveals which accounts still hold a legacy hash. Wrapping (step 3) removes that signal and the cracking exposure at the same time.

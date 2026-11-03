@@ -108,7 +108,7 @@ public sealed class LoginService
 UPDATE Users SET PasswordHash = @newHash WHERE Id = @id AND PasswordHash = @expectedHash;
 ```
 
-Verification takes about 170 ms with the default profile. If the user resets their password in another request during that time, an unconditional update would overwrite the new password's hash with a hash of the old password. The `WHERE` clause makes the upgrade a no-op in that case. The upgrade is opportunistic: if it does not happen, the user is upgraded on a later login.
+Verification takes about 125 ms with the default profile. If the user resets their password in another request during that time, an unconditional update would overwrite the new password's hash with a hash of the old password. The `WHERE` clause makes the upgrade a no-op in that case. The upgrade is opportunistic: if it does not happen, the user is upgraded on a later login.
 
 ## With Entity Framework Core or Identity
 
@@ -136,7 +136,7 @@ if (result.NeedsRehash)
 }
 ```
 
-`HashAsync` throws `ArgumentException` for a password that exceeds `MaxPasswordBytes` after normalization, the case in which the hasher would have returned `Rehash == null`. With the default `ComputeRehashOnVerify = true`, the hasher computes the replacement inside the verify call: a successful login with an outdated hash costs one verification under the old profile plus one new hash under the default profile. A 1.x hash verifies in 5.4 µs, but in 184 ms including its rehash to `2026a` (measured on the hardware in [Profiles](./profiles.md#measured-cost)).
+`HashAsync` throws `ArgumentException` for a password that exceeds `MaxPasswordBytes` after normalization, the case in which the hasher would have returned `Rehash == null`. With the default `ComputeRehashOnVerify = true`, the hasher computes the replacement inside the verify call: a successful login with an outdated hash costs one verification under the old profile plus one new hash under the default profile. A 1.x hash verifies in 6.3 µs, but in 128 ms including its rehash to `2026a` (measured on the hardware in [Profiles](./profiles.md#measured-cost)).
 
 ## Failures during the rehash
 
