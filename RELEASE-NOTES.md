@@ -7,4 +7,6 @@ Masterly.Hash 2.0.0 replaces salted SHA-2 with Argon2id. Existing hashes migrate
 - Requires .NET 8 or later: .NET Framework (netstandard2.0) is no longer supported.
 - 17 optional packages: legacy-format migration (bcrypt, Identity, Django…), DI, ASP.NET Core Identity, EF Core, NIST password policy, HIBP checks, Vault/KMS/Key Vault peppers, honeywords, API keys, blind indexes, Merkle trees, Roslyn analyzers, test helpers and a CLI.
 
+- A new documentation site, [a7mdfre7at.github.io/Masterly.Hash](https://a7mdfre7at.github.io/Masterly.Hash/), and a new logo and package icon.
+
 See [CHANGELOG.md](CHANGELOG.md) for details and [docs/MIGRATION-1x.md](docs/MIGRATION-1x.md) to upgrade.

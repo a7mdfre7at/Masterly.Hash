@@ -39,6 +39,13 @@ A ground-up rewrite. 1.x hashes keep verifying and are upgraded automatically; s
 - `Masterly.Hash.Testing`: a fast hasher, a recording decorator, a fake pepper and assertions.
 - `Masterly.Hash.Tool`: the `masterly-hash` CLI (`hash`, `verify`, `inspect`, `audit`, `wrap`, `bench`, `policy`, `pepper`, `apikey`).
 
+### Added: documentation and branding
+
+- A documentation site at [a7mdfre7at.github.io/Masterly.Hash](https://a7mdfre7at.github.io/Masterly.Hash/), built from `website/` and deployed to GitHub Pages by the `Docs` workflow. It covers every package, with guides, real-world examples, the API reference, the `$mh$` format and the threat model. The docs are versioned: `2.0` is the released line, and `website/docs` is the unreleased "Next" line.
+- The password-cracking playground moved from `docs/playground/` to the site, at `/playground/`.
+- A new logo: a hash sign whose top bar dips into an M. Light and dark README banners, a social preview and usage rules are in [assets/](assets/BRAND.md).
+- Every package uses the new icon (`assets/icon.png`), which replaces `repo_image.png`.
+
 ### Changed
 
 - **Breaking:** every package targets `net8.0` (.NET 8 and later). The `netstandard2.0` target, and with it support for .NET Framework, is removed; stay on 1.x there. (`Masterly.Hash.Analyzers` remains `netstandard2.0`, as Roslyn requires, and works in any project.)
