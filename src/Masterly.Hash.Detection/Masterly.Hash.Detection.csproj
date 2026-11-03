@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Description>Breach and attack detection for Masterly.Hash: honeywords (Juels and Rivest) with a separate honeychecker, honey accounts, and privacy-preserving credential-stuffing detection.</Description>
+    <PackageTags>Security;Password;Honeywords;Honeychecker;HoneyAccount;CredentialStuffing;BreachDetection;Argon2id;Masterly.Hash</PackageTags>
+    <IsAotCompatible>true</IsAotCompatible>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Masterly.Hash\Masterly.Hash.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Masterly.Hash.Detection.Tests" />
+  </ItemGroup>
+
+</Project>
