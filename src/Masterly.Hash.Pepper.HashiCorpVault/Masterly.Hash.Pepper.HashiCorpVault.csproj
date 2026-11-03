@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Description>HashiCorp Vault Transit pepper for Masterly.Hash: the password pepper is an HMAC-SHA256 computed by Vault's Transit engine, so the pepper key never leaves Vault. Supports key-version rotation, Vault namespaces and token providers.</Description>
+    <PackageTags>Security;Password;PasswordHashing;Pepper;HMAC;HashiCorp;Vault;Transit;Masterly.Hash</PackageTags>
+    <IsAotCompatible>true</IsAotCompatible>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Masterly.Hash.Pepper.HashiCorpVault.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Masterly.Hash\Masterly.Hash.csproj" />
+  </ItemGroup>
+
+</Project>

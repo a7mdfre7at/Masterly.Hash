@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Description>AWS KMS pepper for Masterly.Hash: the password pepper is an HMAC-SHA256 computed by AWS KMS GenerateMac on an HMAC KMS key, so the pepper key never leaves KMS. Supports key rotation through a key-id map.</Description>
+    <PackageTags>Security;Password;PasswordHashing;Pepper;HMAC;AWS;KMS;GenerateMac;Masterly.Hash</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Masterly.Hash\Masterly.Hash.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AWSSDK.KeyManagementService" Version="4.0.101.1" />
+  </ItemGroup>
+
+</Project>

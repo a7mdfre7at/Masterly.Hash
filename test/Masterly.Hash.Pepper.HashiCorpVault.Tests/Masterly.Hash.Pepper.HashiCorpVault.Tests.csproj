@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Masterly.Hash.Pepper.HashiCorpVault\Masterly.Hash.Pepper.HashiCorpVault.csproj" />
+  </ItemGroup>
+
+</Project>
