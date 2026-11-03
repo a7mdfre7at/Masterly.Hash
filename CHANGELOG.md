@@ -2,7 +2,7 @@
 
 All notable changes to this project are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project uses [Semantic Versioning](https://semver.org/).
 
-## [2.0.0] - Unreleased
+## [2.0.0] - 2026-11-03
 
 A ground-up rewrite. 1.x hashes keep verifying and are upgraded automatically; see the [migration guide](docs/MIGRATION-1x.md).
 
