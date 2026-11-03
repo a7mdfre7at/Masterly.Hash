@@ -91,7 +91,7 @@ jobs:
       # A workflow_run publish follows a green Build of this exact commit; a manual run has no such Build, so it tests here.
       - name: Test (manual run only)
         if: github.event_name == 'workflow_dispatch'
-        run: dotnet test Masterly.Hash.sln --configuration Release --no-build
+        run: dotnet test Masterly.Hash.slnx --configuration Release --no-build
 
       # Only the projects under src/ ship (src/Directory.Build.props makes them packable); projects that set
       # IsPackable=false produce nothing. Each package gets a sibling .snupkg symbol package.

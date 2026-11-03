@@ -1,0 +1,51 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/perf/">
+    <Project Path="perf/Masterly.Hash.Benchmarks/Masterly.Hash.Benchmarks.csproj" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/Masterly.Hash.Analyzers/Masterly.Hash.Analyzers.csproj" />
+    <Project Path="src/Masterly.Hash.AspNetCore/Masterly.Hash.AspNetCore.csproj" />
+    <Project Path="src/Masterly.Hash.BlindIndex/Masterly.Hash.BlindIndex.csproj" />
+    <Project Path="src/Masterly.Hash.DependencyInjection/Masterly.Hash.DependencyInjection.csproj" />
+    <Project Path="src/Masterly.Hash.Detection/Masterly.Hash.Detection.csproj" />
+    <Project Path="src/Masterly.Hash.EntityFrameworkCore/Masterly.Hash.EntityFrameworkCore.csproj" />
+    <Project Path="src/Masterly.Hash.Integrity.Blake3/Masterly.Hash.Integrity.Blake3.csproj" />
+    <Project Path="src/Masterly.Hash.Integrity/Masterly.Hash.Integrity.csproj" />
+    <Project Path="src/Masterly.Hash.Legacy/Masterly.Hash.Legacy.csproj" />
+    <Project Path="src/Masterly.Hash.Pepper.AwsKms/Masterly.Hash.Pepper.AwsKms.csproj" />
+    <Project Path="src/Masterly.Hash.Pepper.AzureKeyVault/Masterly.Hash.Pepper.AzureKeyVault.csproj" />
+    <Project Path="src/Masterly.Hash.Pepper.HashiCorpVault/Masterly.Hash.Pepper.HashiCorpVault.csproj" />
+    <Project Path="src/Masterly.Hash.Policy/Masterly.Hash.Policy.csproj" />
+    <Project Path="src/Masterly.Hash.Pwned/Masterly.Hash.Pwned.csproj" />
+    <Project Path="src/Masterly.Hash.Testing/Masterly.Hash.Testing.csproj" />
+    <Project Path="src/Masterly.Hash.Tokens/Masterly.Hash.Tokens.csproj" />
+    <Project Path="src/Masterly.Hash.Tool/Masterly.Hash.Tool.csproj" />
+    <Project Path="src/Masterly.Hash/Masterly.Hash.csproj" />
+  </Folder>
+  <Folder Name="/test/">
+    <Project Path="test/Masterly.Hash.Analyzers.Tests/Masterly.Hash.Analyzers.Tests.csproj" />
+    <Project Path="test/Masterly.Hash.AspNetCore.Tests/Masterly.Hash.AspNetCore.Tests.csproj" />
+    <Project Path="test/Masterly.Hash.BlindIndex.Tests/Masterly.Hash.BlindIndex.Tests.csproj" />
+    <Project Path="test/Masterly.Hash.DependencyInjection.Tests/Masterly.Hash.DependencyInjection.Tests.csproj" />
+    <Project Path="test/Masterly.Hash.Detection.Tests/Masterly.Hash.Detection.Tests.csproj" />
+    <Project Path="test/Masterly.Hash.EntityFrameworkCore.Tests/Masterly.Hash.EntityFrameworkCore.Tests.csproj" />
+    <Project Path="test/Masterly.Hash.Integrity.Blake3.Tests/Masterly.Hash.Integrity.Blake3.Tests.csproj" />
+    <Project Path="test/Masterly.Hash.Integrity.Tests/Masterly.Hash.Integrity.Tests.csproj" />
+    <Project Path="test/Masterly.Hash.Legacy.Tests/Masterly.Hash.Legacy.Tests.csproj" />
+    <Project Path="test/Masterly.Hash.Pepper.AwsKms.Tests/Masterly.Hash.Pepper.AwsKms.Tests.csproj" />
+    <Project Path="test/Masterly.Hash.Pepper.AzureKeyVault.Tests/Masterly.Hash.Pepper.AzureKeyVault.Tests.csproj" />
+    <Project Path="test/Masterly.Hash.Pepper.HashiCorpVault.Tests/Masterly.Hash.Pepper.HashiCorpVault.Tests.csproj" />
+    <Project Path="test/Masterly.Hash.Policy.Tests/Masterly.Hash.Policy.Tests.csproj" />
+    <Project Path="test/Masterly.Hash.PropertyTests/Masterly.Hash.PropertyTests.csproj" />
+    <Project Path="test/Masterly.Hash.Pwned.Tests/Masterly.Hash.Pwned.Tests.csproj" />
+    <Project Path="test/Masterly.Hash.Testing.Tests/Masterly.Hash.Testing.Tests.csproj" />
+    <Project Path="test/Masterly.Hash.Tokens.Tests/Masterly.Hash.Tokens.Tests.csproj" />
+    <Project Path="test/Masterly.Hash.Tool.Tests/Masterly.Hash.Tool.Tests.csproj" />
+    <Project Path="test/Masterly.Hash.UnitTests/Masterly.Hash.UnitTests.csproj" />
+  </Folder>
+</Solution>
