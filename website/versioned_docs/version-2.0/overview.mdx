@@ -1,0 +1,53 @@
+---
+id: overview
+title: "Overview"
+description: "What Masterly.Hash is, how a stored password moves through hash, store, verify and rehash, and where to go next."
+sidebar_label: "Overview"
+---
+
+import ConceptFlow from '@site/src/components/docs/ConceptFlow';
+import LinkCards from '@site/src/components/docs/LinkCards';
+
+Masterly.Hash is a password-hashing library for .NET 8 and later. You call `Password.Hash` when a user sets a password and `Password.Verify` when they log in. The defaults follow RFC 9106, OWASP and NIST SP 800-63B: Argon2id with 64 MiB of memory and 3 passes, a 16-byte random salt, NFKC normalization, a 1024-byte input cap and a constant-time comparison.
+
+Every hash you already have keeps working. Hashes from Masterly.Hash 1.x verify out of the box, and the `Masterly.Hash.Legacy` package adds bcrypt, ASP.NET Identity, Django, phpass, raw MD5 and SHA digests and external Argon2 hashes. When an old hash verifies, the result carries a fresh Argon2id replacement, so your table upgrades itself as users log in.
+
+The core package targets `net8.0` and depends only on Konscious.Security.Cryptography.Argon2 for the Argon2id implementation. Seventeen optional packages add dependency injection, ASP.NET Core Identity, Entity Framework Core, remote peppers, password policy, tokens, blind indexes, integrity hashing, attack detection, analyzers, a command-line tool and test helpers. All 18 packages ship with the same version number.
+
+## How it works
+
+A stored password goes through four stages. You write code for the first and third; the library handles the second and tells you when the fourth is due. Select a stage to read its guide.
+
+<ConceptFlow />
+
+## What you can do
+
+<LinkCards
+  columns={3}
+  items={[
+    {icon: 'lock', title: 'Hash and verify', text: 'Two methods, sync or async, with a result that says why a check failed.', to: '/docs/hashing-and-verifying'},
+    {icon: 'gauge', title: 'Choose a profile', text: 'Argon2id 64 MiB, Argon2id 19 MiB for small hosts, or PBKDF2 for FIPS-only environments.', to: '/docs/profiles'},
+    {icon: 'upgrade', title: 'Upgrade on login', text: 'Outdated formats, profiles and pepper keys verify and hand you a replacement hash.', to: '/docs/upgrade-on-login'},
+    {icon: 'key', title: 'Add a pepper', text: 'An HMAC key kept outside the database, with key ids so you can rotate it.', to: '/docs/peppers'},
+    {icon: 'cpu', title: 'Stay up under load', text: 'Bound memory with a concurrency gate and turn overload into a fast 503.', to: '/docs/limits-and-concurrency'},
+    {icon: 'shuffle', title: 'Migrate old hashes', text: 'Verify bcrypt, Identity, Django, phpass and raw digests, then upgrade them.', to: '/docs/legacy-formats'},
+    {icon: 'layers', title: 'Wrap weak hashes now', text: 'Put Argon2id around every weak hash offline, without the passwords.', to: '/docs/onion-wrapping'},
+    {icon: 'shieldCheck', title: 'ASP.NET Core Identity', text: 'Replace Identity’s hasher in one line. Existing Identity users keep logging in.', to: '/docs/aspnetcore-identity'},
+    {icon: 'database', title: 'Entity Framework Core', text: 'Hash a column on SaveChanges and save upgraded hashes after login.', to: '/docs/entity-framework-core'},
+    {icon: 'scale', title: 'Password policy', text: 'NIST SP 800-63B rules, a strength estimate and a breached-password check.', to: '/docs/password-policy'},
+    {icon: 'ticket', title: 'Beyond passwords', text: 'API keys, signed tokens, blind indexes, Merkle trees and attack detection.', to: '/docs/api-keys-and-tokens'},
+    {icon: 'code', title: 'Tooling', text: 'Roslyn analyzers, the masterly-hash CLI, test helpers and benchmarks.', to: '/docs/analyzers'},
+  ]}
+/>
+
+## Where to go next
+
+<LinkCards
+  columns={2}
+  items={[
+    {eyebrow: 'New here', title: 'Quick Start', text: 'Install the package, hash a password, verify it and save the rehash.', to: '/docs/quick-start'},
+    {eyebrow: 'See it in context', title: 'Real-world examples', text: 'Complete login, registration and migration flows you can copy.', to: '/docs/examples'},
+    {eyebrow: 'Coming from 1.x', title: 'Upgrading from 1.x', text: 'Old hashes keep working. Switch login to the new API and wrap the rest.', to: '/docs/upgrading-from-1x'},
+    {eyebrow: 'Looking something up', title: 'API reference', text: 'Every public type and member, one package at a time.', to: '/docs/api-reference'},
+  ]}
+/>

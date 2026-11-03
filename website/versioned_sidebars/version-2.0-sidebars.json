@@ -1,0 +1,158 @@
+{
+  "docs": [
+    {
+      "type": "category",
+      "label": "Getting Started",
+      "collapsed": false,
+      "link": {
+        "type": "generated-index",
+        "slug": "/category/getting-started",
+        "title": "Getting Started",
+        "description": "Install the packages, hash your first password and learn how the pieces fit."
+      },
+      "items": [
+        "overview",
+        "installation",
+        "quick-start",
+        "how-it-works"
+      ]
+    },
+    {
+      "type": "category",
+      "label": "Password Hashing",
+      "collapsed": false,
+      "link": {
+        "type": "generated-index",
+        "slug": "/category/password-hashing",
+        "title": "Password Hashing",
+        "description": "Hash and verify passwords, choose profiles, add a pepper and stay safe under load."
+      },
+      "items": [
+        "hashing-and-verifying",
+        "profiles",
+        "upgrade-on-login",
+        "peppers",
+        "limits-and-concurrency",
+        "user-enumeration"
+      ]
+    },
+    {
+      "type": "category",
+      "label": "Migrating Existing Hashes",
+      "collapsed": false,
+      "link": {
+        "type": "generated-index",
+        "slug": "/category/migration",
+        "title": "Migrating Existing Hashes",
+        "description": "Verify bcrypt, Identity, Django, phpass and raw digests, wrap weak hashes offline and upgrade from 1.x."
+      },
+      "items": [
+        "legacy-formats",
+        "onion-wrapping",
+        "auditing-hash-tables",
+        "upgrading-from-1x"
+      ]
+    },
+    {
+      "type": "category",
+      "label": "Integrations",
+      "collapsed": false,
+      "link": {
+        "type": "generated-index",
+        "slug": "/category/integrations",
+        "title": "Integrations",
+        "description": "Dependency injection, ASP.NET Core Identity, Entity Framework Core and telemetry."
+      },
+      "items": [
+        "dependency-injection",
+        "aspnetcore-identity",
+        "entity-framework-core",
+        "observability"
+      ]
+    },
+    {
+      "type": "category",
+      "label": "Key Management",
+      "collapsed": false,
+      "link": {
+        "type": "generated-index",
+        "slug": "/category/key-management",
+        "title": "Key Management",
+        "description": "Keep the pepper key inside HashiCorp Vault, AWS KMS or Azure Key Vault."
+      },
+      "items": [
+        "hashicorp-vault",
+        "aws-kms",
+        "azure-key-vault"
+      ]
+    },
+    {
+      "type": "category",
+      "label": "Password Policy",
+      "collapsed": false,
+      "link": {
+        "type": "generated-index",
+        "slug": "/category/password-policy",
+        "title": "Password Policy",
+        "description": "NIST SP 800-63B rules, strength estimation and breached-password checks."
+      },
+      "items": [
+        "password-policy",
+        "strength-estimation",
+        "breach-checking"
+      ]
+    },
+    {
+      "type": "category",
+      "label": "Beyond Passwords",
+      "collapsed": false,
+      "link": {
+        "type": "generated-index",
+        "slug": "/category/beyond-passwords",
+        "title": "Beyond Passwords",
+        "description": "API keys and signed tokens, blind indexes, tamper evidence and attack detection."
+      },
+      "items": [
+        "api-keys-and-tokens",
+        "blind-indexes",
+        "integrity",
+        "merkle-trees-and-hash-chains",
+        "attack-detection"
+      ]
+    },
+    {
+      "type": "category",
+      "label": "Tooling",
+      "collapsed": false,
+      "link": {
+        "type": "generated-index",
+        "slug": "/category/tooling",
+        "title": "Tooling",
+        "description": "Roslyn analyzers, the command-line tool, test helpers and performance."
+      },
+      "items": [
+        "analyzers",
+        "command-line-tool",
+        "testing",
+        "performance"
+      ]
+    },
+    "examples",
+    {
+      "type": "category",
+      "label": "Reference",
+      "collapsed": false,
+      "link": {
+        "type": "generated-index",
+        "slug": "/category/reference",
+        "title": "Reference",
+        "description": "The public API of every package, the $mh$ format specification and the threat model."
+      },
+      "items": [
+        "api-reference",
+        "hash-format",
+        "threat-model"
+      ]
+    }
+  ]
+}
