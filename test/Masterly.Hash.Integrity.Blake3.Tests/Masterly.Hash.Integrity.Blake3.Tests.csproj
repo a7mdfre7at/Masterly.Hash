@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Masterly.Hash.Integrity.Blake3\Masterly.Hash.Integrity.Blake3.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Description>BLAKE3 (plain and keyed) for Masterly.Hash.Integrity content hashes, Merkle trees, hash chains and directory manifests, using the fully managed SIMD Blake3 package.</Description>
+    <PackageTags>Security;Hash;Integrity;BLAKE3;Blake3;Merkle;Checksum;MAC</PackageTags>
+    <IsAotCompatible>true</IsAotCompatible>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Masterly.Hash.Integrity\Masterly.Hash.Integrity.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Blake3" Version="3.0.2" />
+  </ItemGroup>
+
+</Project>

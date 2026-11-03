@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Description>Tamper evidence for files and records: streaming content hashes (SHA-256/384/512, HMAC-SHA256), RFC 9162 Merkle trees with inclusion and consistency proofs, keyed hash-chain audit logs, and directory manifests that report added, removed and modified files.</Description>
+    <PackageTags>Security;Hash;Integrity;Merkle;MerkleTree;RFC9162;CertificateTransparency;HashChain;AuditLog;Manifest;Checksum;SHA256;HMAC</PackageTags>
+    <IsAotCompatible>true</IsAotCompatible>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Masterly.Hash\Masterly.Hash.csproj" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Masterly.Hash.Integrity.Tests" />
+  </ItemGroup>
+
+</Project>
