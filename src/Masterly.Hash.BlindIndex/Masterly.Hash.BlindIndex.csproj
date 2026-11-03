@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Description>Blind indexes for searching encrypted PII columns: keyed HMAC-SHA256 indexes with per-column domain separation, configurable truncation, pluggable normalizers (email, phone, case-insensitive), compound indexes and key rotation.</Description>
+    <PackageTags>Security;BlindIndex;Encryption;PII;HMAC;Searchable;GDPR;Privacy;CipherSweet</PackageTags>
+    <IsAotCompatible>true</IsAotCompatible>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Masterly.Hash\Masterly.Hash.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Masterly.Hash.BlindIndex.Tests" />
+  </ItemGroup>
+
+</Project>

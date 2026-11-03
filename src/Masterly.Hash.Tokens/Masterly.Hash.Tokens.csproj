@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Description>High-entropy secrets done right for Masterly.Hash: GitHub-style API keys with an offline CRC32 checksum and keyed (HMAC-SHA256) indexable lookup hashes with key rotation; signed, expiring, purpose-bound tokens for password reset, email confirmation and magic links; and unbiased secure random strings.</Description>
+    <PackageTags>Security;ApiKey;Token;HMAC;SignedToken;MagicLink;PasswordReset;Base62;CRC32;Random</PackageTags>
+    <IsAotCompatible>true</IsAotCompatible>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Masterly.Hash\Masterly.Hash.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Masterly.Hash.Tokens.Tests" />
+  </ItemGroup>
+
+</Project>

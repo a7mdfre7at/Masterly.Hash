@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Masterly.Hash.BlindIndex\Masterly.Hash.BlindIndex.csproj" />
+  </ItemGroup>
+
+</Project>
