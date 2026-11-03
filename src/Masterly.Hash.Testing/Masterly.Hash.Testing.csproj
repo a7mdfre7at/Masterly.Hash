@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Description>Test helpers for code that uses Masterly.Hash: a real but microsecond-fast PasswordHasher, a call-recording decorator, a deterministic fake pepper, framework-agnostic assertions and known sample hashes. For test projects only; never reference it from production code.</Description>
+    <PackageTags>Security;Hash;Password;Argon2;Testing;UnitTesting;Fakes;Masterly</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Masterly.Hash\Masterly.Hash.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Masterly.Hash.Testing\Masterly.Hash.Testing.csproj" />
+    <ProjectReference Include="..\..\src\Masterly.Hash\Masterly.Hash.csproj" />
+  </ItemGroup>
+
+</Project>
