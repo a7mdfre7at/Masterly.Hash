@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Description>Microsoft.Extensions.DependencyInjection integration for Masterly.Hash: AddMasterlyHash() registers a singleton IPasswordHasher, binds options from IConfiguration (profiles, limits, pepper key ring), validates them at startup and exposes a builder for peppers, legacy formats and profiles.</Description>
+    <PackageTags>Security;Hash;Password;Argon2;Argon2id;PBKDF2;Pepper;PasswordHashing;DependencyInjection;Options;Configuration</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
+    <!-- Lifts the transitive binder (8.0.0 via Options.ConfigurationExtensions) to the latest 8.0.x servicing release. -->
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Masterly.Hash\Masterly.Hash.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Masterly.Hash.DependencyInjection.Tests" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Description>Entity Framework Core integration for Masterly.Hash: a SaveChanges interceptor that hashes annotated password properties in place, computes rotation-aware blind indexes for encrypted columns, query helpers for blind-index lookups, and a verify-and-upgrade helper that transparently rehashes outdated hashes on login.</Description>
+    <PackageTags>Security;Password;Hashing;Argon2;EntityFrameworkCore;EFCore;BlindIndex;Interceptor;PII</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.33" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Masterly.Hash\Masterly.Hash.csproj" />
+    <ProjectReference Include="..\Masterly.Hash.BlindIndex\Masterly.Hash.BlindIndex.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Masterly.Hash.EntityFrameworkCore.Tests" />
+  </ItemGroup>
+
+</Project>
