@@ -123,9 +123,12 @@ public class CodeFixGuardTests
             NonConstantTimeComparisonAnalyzer.FixKey, NonConstantTimeComparisonAnalyzer.FixFixedTimeEquals);
 
         CodeAction action = Assert.Single(await probe.GetActionsAsync(new FixedTimeEqualsCodeFixProvider(), diagnostic));
+
+        // The fix reuses the document's line ending, and git (text=auto) checks this file out with CRLF on Windows.
+        string newLine = SequenceEqualSource.Contains("\r\n", System.StringComparison.Ordinal) ? "\r\n" : "\n";
         Assert.Equal(
             SequenceEqualSource
-                .Replace("using System.Linq;", "using System.Linq;\nusing System.Security.Cryptography;", System.StringComparison.Ordinal)
+                .Replace("using System.Linq;", $"using System.Linq;{newLine}using System.Security.Cryptography;", System.StringComparison.Ordinal)
                 .Replace("=> computed.SequenceEqual(expectedMac);", "=> CryptographicOperations.FixedTimeEquals(computed, expectedMac);", System.StringComparison.Ordinal),
             await probe.ApplyAsync(action));
     }
