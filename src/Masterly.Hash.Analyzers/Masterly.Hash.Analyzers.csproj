@@ -1,0 +1,51 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- Analyzers must target netstandard2.0 to load in every compiler host (csc, VS, Rider, OmniSharp). -->
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Description>Roslyn analyzers and code fixes that catch password-hashing mistakes at compile time: fast hashes (MD5/SHA-*) used on passwords, non-constant-time comparison of hashes and tokens, hard-coded peppers and keys, passwords written to logs, weak PBKDF2 parameters, and use of the obsolete Masterly.Hash 1.x API.</Description>
+    <PackageTags>Security;Hash;Password;Analyzer;Roslyn;CodeFix;StaticAnalysis;Argon2;PBKDF2;Masterly.Hash</PackageTags>
+
+    <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+    <IsRoslynComponent>true</IsRoslynComponent>
+
+    <!-- The dll goes to analyzers/dotnet/cs, not lib/: consumers never reference it at compile time. -->
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <DevelopmentDependency>true</DevelopmentDependency>
+    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+    <!-- No lib/ output means no symbols package to produce. -->
+    <IncludeSymbols>false</IncludeSymbols>
+
+    <!--
+      RS1038: the code fixes ship in the same assembly as the analyzers, so it references Workspaces.
+      The command-line compiler only instantiates DiagnosticAnalyzer types (it discovers them through
+      metadata, never loading the CodeFixProvider types), and every IDE host that runs code fixes ships
+      Workspaces. This is the layout used by most single-package analyzers.
+    -->
+    <NoWarn>$(NoWarn);RS1038</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- 4.8 keeps compatibility with Visual Studio 2022 17.8+ and .NET 8 SDK hosts. -->
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.8.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.8.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="5.9.0" PrivateAssets="all">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- RS2008: release tracking. -->
+    <AdditionalFiles Include="AnalyzerReleases.Shipped.md" />
+    <AdditionalFiles Include="AnalyzerReleases.Unshipped.md" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Masterly.Hash.Analyzers.Tests" />
+  </ItemGroup>
+
+</Project>
