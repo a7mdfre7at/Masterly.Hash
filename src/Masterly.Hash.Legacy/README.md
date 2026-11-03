@@ -1,5 +1,7 @@
 # Masterly.Hash.Legacy
 
+![Masterly.Hash: password hashing you can't get wrong.](https://raw.githubusercontent.com/a7mdfre7at/Masterly.Hash/master/assets/banner.png)
+
 The universal hash migrator for [Masterly.Hash](https://www.nuget.org/packages/Masterly.Hash). Point it at
 a password table from another system and your users keep logging in. Each successful login replaces the old hash
 with an Argon2id Masterly hash. You can also onion-wrap weak hashes offline today, without waiting for anyone to

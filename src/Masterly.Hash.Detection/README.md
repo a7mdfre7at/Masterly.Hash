@@ -1,5 +1,7 @@
 # Masterly.Hash.Detection
 
+![Masterly.Hash: password hashing you can't get wrong.](https://raw.githubusercontent.com/a7mdfre7at/Masterly.Hash/master/assets/banner.png)
+
 Breach and attack detection for [Masterly.Hash](https://github.com/a7mdfre7at/Masterly.Hash):
 
 - **Honeywords** (Juels and Rivest, *Honeywords: Making Password-Cracking Detectable*, ACM CCS 2013). Each user

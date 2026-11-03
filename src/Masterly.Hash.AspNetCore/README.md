@@ -1,5 +1,7 @@
 # Masterly.Hash.AspNetCore
 
+![Masterly.Hash: password hashing you can't get wrong.](https://raw.githubusercontent.com/a7mdfre7at/Masterly.Hash/master/assets/banner.png)
+
 ASP.NET Core integration for [Masterly.Hash](https://github.com/a7mdfre7at/Masterly.Hash):
 
 - **ASP.NET Core Identity adapter**: `MasterlyIdentityPasswordHasher<TUser>` replaces Identity's `PasswordHasher<TUser>`.

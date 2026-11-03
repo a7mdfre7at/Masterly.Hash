@@ -1,5 +1,7 @@
 # Masterly.Hash.Analyzers
 
+![Masterly.Hash: password hashing you can't get wrong.](https://raw.githubusercontent.com/a7mdfre7at/Masterly.Hash/master/assets/banner.png)
+
 Roslyn analyzers and code fixes that catch password-hashing mistakes while you type and at build time. The package
 is a development dependency: it adds nothing to your output, and it works with or without the `Masterly.Hash`
 runtime package (rules that suggest `Password.Hash` offer their code fix only when `Masterly.Hash` is referenced).

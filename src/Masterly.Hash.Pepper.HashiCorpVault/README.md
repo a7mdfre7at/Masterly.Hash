@@ -1,5 +1,7 @@
 # Masterly.Hash.Pepper.HashiCorpVault
 
+![Masterly.Hash: password hashing you can't get wrong.](https://raw.githubusercontent.com/a7mdfre7at/Masterly.Hash/master/assets/banner.png)
+
 A [Masterly.Hash](https://github.com/a7mdfre7at/Masterly.Hash) pepper backed by the HashiCorp Vault **Transit** secrets engine.
 Before hashing, the hasher sends the password-derived input to Vault's `hmac` endpoint. Vault returns HMAC-SHA256 under a Transit
 key that **never leaves Vault**.

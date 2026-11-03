@@ -1,5 +1,7 @@
 # Masterly.Hash.Pwned
 
+![Masterly.Hash: password hashing you can't get wrong.](https://raw.githubusercontent.com/a7mdfre7at/Masterly.Hash/master/assets/banner.png)
+
 A [Have I Been Pwned](https://haveibeenpwned.com/Passwords) **Pwned Passwords** client for
 [Masterly.Hash](https://github.com/a7mdfre7at/Masterly.Hash). It implements `IBreachedPasswordChecker` from
 `Masterly.Hash.Policy`, so `PasswordPolicy` can reject passwords that already appear in breaches

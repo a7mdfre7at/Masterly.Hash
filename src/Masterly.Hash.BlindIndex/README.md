@@ -1,5 +1,7 @@
 # Masterly.Hash.BlindIndex
 
+![Masterly.Hash: password hashing you can't get wrong.](https://raw.githubusercontent.com/a7mdfre7at/Masterly.Hash/master/assets/banner.png)
+
 Blind indexes for searching encrypted PII columns, following the CipherSweet / Paragon Initiative Enterprises
 pattern. You encrypt a column (email, phone, national ID) with randomized encryption, and store next to it a
 **blind index**: a keyed, truncated HMAC of the normalized plaintext. Equality queries go against the index, so the

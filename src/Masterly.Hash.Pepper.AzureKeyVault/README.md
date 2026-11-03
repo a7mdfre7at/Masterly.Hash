@@ -1,5 +1,7 @@
 # Masterly.Hash.Pepper.AzureKeyVault
 
+![Masterly.Hash: password hashing you can't get wrong.](https://raw.githubusercontent.com/a7mdfre7at/Masterly.Hash/master/assets/banner.png)
+
 A [Masterly.Hash](https://github.com/a7mdfre7at/Masterly.Hash) pepper whose keys are stored as **Azure Key Vault secrets**.
 
 > **Trust model in one line:** Azure Key Vault cannot compute HMACs, so this provider **loads the pepper keys into

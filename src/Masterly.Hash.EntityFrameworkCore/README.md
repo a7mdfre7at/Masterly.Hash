@@ -1,5 +1,7 @@
 # Masterly.Hash.EntityFrameworkCore
 
+![Masterly.Hash: password hashing you can't get wrong.](https://raw.githubusercontent.com/a7mdfre7at/Masterly.Hash/master/assets/banner.png)
+
 Entity Framework Core 8+ integration for [Masterly.Hash](https://github.com/a7mdfre7at/Masterly.Hash):
 
 - **Password columns**: mark a property with `IsHashedPassword()`. On `SaveChanges`, a plaintext value is replaced by its Argon2id hash in the entity itself.

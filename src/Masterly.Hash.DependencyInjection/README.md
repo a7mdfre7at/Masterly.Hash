@@ -1,5 +1,7 @@
 # Masterly.Hash.DependencyInjection
 
+![Masterly.Hash: password hashing you can't get wrong.](https://raw.githubusercontent.com/a7mdfre7at/Masterly.Hash/master/assets/banner.png)
+
 `Microsoft.Extensions.DependencyInjection` integration for [Masterly.Hash](https://github.com/a7mdfre7at/Masterly.Hash).
 It registers one thread-safe `PasswordHasher` singleton (also exposed as `IPasswordHasher`), binds its options
 from `IConfiguration`, validates them at startup, and gives you a fluent builder for peppers, legacy formats and profiles.

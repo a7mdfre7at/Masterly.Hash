@@ -1,5 +1,7 @@
 # Masterly.Hash.Policy
 
+![Masterly.Hash: password hashing you can't get wrong.](https://raw.githubusercontent.com/a7mdfre7at/Masterly.Hash/master/assets/banner.png)
+
 Password quality checks for sign-up and password-change forms, aligned with **NIST SP 800-63B rev. 4**, plus a
 zxcvbn-inspired strength estimator. Companion to [Masterly.Hash](https://www.nuget.org/packages/Masterly.Hash).
 

@@ -1,5 +1,7 @@
 # Masterly.Hash
 
+![Masterly.Hash: password hashing you can't get wrong.](https://raw.githubusercontent.com/a7mdfre7at/Masterly.Hash/master/assets/banner.png)
+
 Password hashing you can't get wrong. Two methods, safe defaults, and existing hashes upgrade themselves on login.
 
 ```

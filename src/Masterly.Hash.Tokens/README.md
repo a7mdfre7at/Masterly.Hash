@@ -1,5 +1,7 @@
 # Masterly.Hash.Tokens
 
+![Masterly.Hash: password hashing you can't get wrong.](https://raw.githubusercontent.com/a7mdfre7at/Masterly.Hash/master/assets/banner.png)
+
 High-entropy secrets done right, on top of [Masterly.Hash](https://www.nuget.org/packages/Masterly.Hash):
 
 - **API keys** in the GitHub-token style: `<prefix>_<base62 random><6-char base62 CRC-32>`, stored as a fast,

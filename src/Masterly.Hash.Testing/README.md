@@ -1,5 +1,7 @@
 # Masterly.Hash.Testing
 
+![Masterly.Hash: password hashing you can't get wrong.](https://raw.githubusercontent.com/a7mdfre7at/Masterly.Hash/master/assets/banner.png)
+
 Test helpers for applications that use [Masterly.Hash](https://github.com/a7mdfre7at/Masterly.Hash). Reference it from **test projects only**.
 
 | Helper | What it does |

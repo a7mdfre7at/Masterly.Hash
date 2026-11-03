@@ -1,5 +1,7 @@
 # Masterly.Hash.Integrity
 
+![Masterly.Hash: password hashing you can't get wrong.](https://raw.githubusercontent.com/a7mdfre7at/Masterly.Hash/master/assets/banner.png)
+
 Tamper evidence for files and records, built on [Masterly.Hash](https://www.nuget.org/packages/Masterly.Hash):
 
 - **Content hashes**: `sha256:<hex>`, `sha384:`, `sha512:` and keyed `hmac-sha256:<keyId>:<hex>`, computed from streams in pooled buffers. Verification is constant-time.

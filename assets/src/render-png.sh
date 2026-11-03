@@ -3,6 +3,7 @@
 set -euo pipefail
 cd "$(dirname "$0")"; R="bash ./render.sh"; O=..
 $R $O/icon.svg               $O/icon.png            256 256
+$R $O/banner-light.svg       $O/banner.png         2560 640
 $R $O/icon.svg               $O/icon-128.png        128 128
 $R favicon-16-pixel.svg      $O/favicon-16.png       16  16
 $R favicon-32-hinted.svg     $O/favicon-32.png       32  32

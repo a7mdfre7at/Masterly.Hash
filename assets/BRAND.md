@@ -53,6 +53,7 @@ Never use `brand` on a dark background (2.7:1) or `brand-dark` on a light one.
 | `icon-mono.svg` | `currentColor` knockout tile, inline SVG and CSS masks only (see note) |
 | `favicon.svg`, `favicon.ico` (16/32/48), `favicon-16.png`, `favicon-32.png` | Docs site and browser tabs. The 16 and 32 px frames are hand-hinted |
 | `banner-light.svg` / `banner-dark.svg` | README header (switch with `<picture>`, below) |
+| `banner.png` (2560×640, from `banner-light.svg`) | NuGet package READMEs, which cannot use relative paths, SVG themes or `<picture>` |
 | `social-preview.png` (from `social-preview.svg`) | GitHub social preview (1280×640) |
 
 **`currentColor` note.** `mark-mono.svg`, `mark-small.svg` and `icon-mono.svg` take their colour from CSS `color`
@@ -100,10 +101,11 @@ Docs-site favicon (`<head>`):
 ## Where the repo uses these
 - **NuGet icon:** `src/Directory.Build.props` packs `assets/icon.png` into every package as `<PackageIcon>icon.png</PackageIcon>`.
 - **README header:** the root `README.md` switches `banner-light.svg` / `banner-dark.svg` with `<picture>`.
+- **NuGet README header:** every `src/*/README.md` starts with `banner.png` from `raw.githubusercontent.com/.../master/assets/banner.png`.
 - **GitHub social preview:** not stored in git. Render `social-preview.png` (see Rebuilding) and upload it under
   repository *Settings → General → Social preview*.
 
-Only `icon.png` is committed as a raster, because NuGet requires a PNG. `icon-128.png`, `favicon-16.png`,
+Only `icon.png` and `banner.png` are committed as rasters, because NuGet needs a PNG icon and nuget.org READMEs load images from an absolute `raw.githubusercontent.com` URL. `icon-128.png`, `favicon-16.png`,
 `favicon-32.png`, `favicon.ico` and `social-preview.png` are build outputs, ignored by `assets/.gitignore`.
 
 ## Rebuilding

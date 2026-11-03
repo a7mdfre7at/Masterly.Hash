@@ -1,5 +1,7 @@
 # Masterly.Hash.Integrity.Blake3
 
+![Masterly.Hash: password hashing you can't get wrong.](https://raw.githubusercontent.com/a7mdfre7at/Masterly.Hash/master/assets/banner.png)
+
 Adds [BLAKE3](https://github.com/BLAKE3-team/BLAKE3) to [Masterly.Hash.Integrity](https://www.nuget.org/packages/Masterly.Hash.Integrity) in two modes: plain (`blake3:<hex>`) and keyed (`blake3-keyed:<keyId>:<hex>`). You can use it anywhere that package accepts a `ContentHashAlgorithm`: content hashes, Merkle trees, hash chains and directory manifests.
 
 The hashing comes from the fully managed, SIMD-accelerated [`Blake3`](https://www.nuget.org/packages/Blake3) package (BSD-2-Clause). Targets `net8.0`.

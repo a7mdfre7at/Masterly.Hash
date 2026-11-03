@@ -1,5 +1,7 @@
 # Masterly.Hash.Tool
 
+![Masterly.Hash: password hashing you can't get wrong.](https://raw.githubusercontent.com/a7mdfre7at/Masterly.Hash/master/assets/banner.png)
+
 `masterly-hash` is a .NET global tool for working with [Masterly.Hash](https://github.com/a7mdfre7at/Masterly.Hash) password hashes from a terminal or script. It can:
 
 - hash and verify passwords

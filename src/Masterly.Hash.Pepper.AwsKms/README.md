@@ -1,5 +1,7 @@
 # Masterly.Hash.Pepper.AwsKms
 
+![Masterly.Hash: password hashing you can't get wrong.](https://raw.githubusercontent.com/a7mdfre7at/Masterly.Hash/master/assets/banner.png)
+
 A [Masterly.Hash](https://github.com/a7mdfre7at/Masterly.Hash) pepper computed by **AWS KMS `GenerateMac`**
 (`HMAC_SHA_256`) on an HMAC KMS key. The pepper key **never leaves KMS**.
 
