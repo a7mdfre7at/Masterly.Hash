@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Description>Password quality checks aligned with NIST SP 800-63B rev. 4 for Masterly.Hash: length in Unicode code points, no composition rules, blocklist of the 10,000 most common passwords, context-word and repetitive/sequential checks, optional breached-password lookup, and a zxcvbn-inspired strength estimator with crack-time estimates and feedback.</Description>
+    <PackageTags>Security;Password;PasswordPolicy;PasswordStrength;NIST;800-63B;zxcvbn;Blocklist;Breached;Masterly.Hash</PackageTags>
+    <IsAotCompatible>true</IsAotCompatible>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Masterly.Hash\Masterly.Hash.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\common-passwords-10k.txt" LogicalName="Masterly.Hash.Policy.common-passwords-10k.txt" />
+    <EmbeddedResource Include="Resources\english-words.txt" LogicalName="Masterly.Hash.Policy.english-words.txt" />
+    <None Include="THIRD-PARTY-NOTICES.txt" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Masterly.Hash.Policy.Tests" />
+  </ItemGroup>
+
+</Project>

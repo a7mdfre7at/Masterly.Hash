@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Description>Have I Been Pwned "Pwned Passwords" k-anonymity client for Masterly.Hash: implements IBreachedPasswordChecker from Masterly.Hash.Policy. Sends only the first 5 hex characters of the password's SHA-1 hash, requests padded responses, fails open (or throws) on outages and timeouts, and offers a bounded in-memory range cache plus an AddPwnedPasswords() typed HttpClient registration.</Description>
+    <PackageTags>Security;Password;Breached;PwnedPasswords;HaveIBeenPwned;HIBP;KAnonymity;NIST;800-63B;PasswordPolicy;Masterly.Hash</PackageTags>
+    <IsAotCompatible>true</IsAotCompatible>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Masterly.Hash\Masterly.Hash.csproj" />
+    <ProjectReference Include="..\Masterly.Hash.Policy\Masterly.Hash.Policy.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Masterly.Hash.Pwned.Tests" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,49 @@
+Masterly.Hash.Policy third-party notices
+========================================
+
+This package embeds the following third-party material.
+
+-------------------------------------------------------------------------------
+1. SecLists - 10k-most-common.txt
+-------------------------------------------------------------------------------
+
+Embedded as: Resources/common-passwords-10k.txt (unmodified)
+Source:      https://github.com/danielmiessler/SecLists
+File:        Passwords/Common-Credentials/10k-most-common.txt
+SHA-256:     68782d6a4a19a4768d5f15dd66bd534e7a33055cc755411e33f16d18c50fdcce
+
+MIT License
+
+Copyright (c) 2018 Daniel Miessler
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+-------------------------------------------------------------------------------
+2. zxcvbn (algorithm, not code)
+-------------------------------------------------------------------------------
+
+The strength estimator is inspired by zxcvbn by Dropbox, Inc.
+(https://github.com/dropbox/zxcvbn, MIT License, Copyright (c) 2012-2016
+Dan Wheeler and Dropbox, Inc.). It re-implements the published approach
+(pattern matching, minimum-guesses decomposition, score thresholds and
+feedback wording) independently in C#; it is not a port and does not embed
+zxcvbn's frequency lists, so its numbers differ from zxcvbn's.
+
+The English word list (Resources/english-words.txt) was compiled for this
+package from general knowledge of common English vocabulary.
