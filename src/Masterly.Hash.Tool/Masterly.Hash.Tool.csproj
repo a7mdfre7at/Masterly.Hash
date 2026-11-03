@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>masterly-hash</ToolCommandName>
+    <RollForward>Major</RollForward>
+    <AssemblyName>masterly-hash</AssemblyName>
+    <PackageId>Masterly.Hash.Tool</PackageId>
+    <RootNamespace>Masterly.Hash.Tool</RootNamespace>
+    <Description>The masterly-hash .NET global tool: hash and verify passwords from a no-echo prompt or stdin, inspect and audit stored hashes, onion-wrap legacy hashes in a CSV export, benchmark the built-in profiles on this machine, check password policy (with an optional Have I Been Pwned k-anonymity lookup), and generate pepper keys and API keys.</Description>
+    <PackageTags>Security;Hash;Password;Argon2;Argon2id;CLI;DotnetTool;Migration;Audit;ApiKey;Pepper;Masterly.Hash</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.CommandLine" Version="2.0.14" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Masterly.Hash\Masterly.Hash.csproj" />
+    <ProjectReference Include="..\Masterly.Hash.Legacy\Masterly.Hash.Legacy.csproj" />
+    <ProjectReference Include="..\Masterly.Hash.Policy\Masterly.Hash.Policy.csproj" />
+    <ProjectReference Include="..\Masterly.Hash.Pwned\Masterly.Hash.Pwned.csproj" />
+    <ProjectReference Include="..\Masterly.Hash.Tokens\Masterly.Hash.Tokens.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Masterly.Hash.Tool.Tests" />
+  </ItemGroup>
+
+</Project>
