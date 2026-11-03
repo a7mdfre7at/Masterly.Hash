@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Property-based and differential fuzz tests for Masterly.Hash and Masterly.Hash.Legacy. -->
+
+  <ItemGroup>
+    <!-- FsCheck 3.x supports xunit 2.x (xunit.extensibility.execution [2.4.1, 3.0.0)). BSD-3-Clause. -->
+    <PackageReference Include="FsCheck.Xunit" Version="3.6.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Masterly.Hash\Masterly.Hash.csproj" />
+    <ProjectReference Include="..\..\src\Masterly.Hash.Legacy\Masterly.Hash.Legacy.csproj" />
+  </ItemGroup>
+
+</Project>
