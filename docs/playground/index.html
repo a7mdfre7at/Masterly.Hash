@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="description" content="Educational playground: how long would an offline attacker with a stolen database need to crack a password under different storage schemes?">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'">
+<title>Masterly.Hash — password cracking playground</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --surface: #f4f6f9;
+    --surface-2: #e9edf3;
+    --border: #c9d0da;
+    --text: #1a1d23;
+    --muted: #49515e;
+    --accent: #0b5cad;
+    --accent-soft: #e3eefb;
+    --danger: #b3261e;
+    --warn: #8a5a00;
+    --ok: #1e6b34;
+    --bar-danger: #d1453b;
+    --bar-warn: #c98a00;
+    --bar-ok: #2e8b4a;
+    --bar-track: #dde3eb;
+    --code-bg: #f0f2f5;
+    --focus: #0b5cad;
+    --radius: 10px;
+    --mono: ui-monospace, SFMono-Regular, "Cascadia Code", Consolas, "Liberation Mono", Menlo, monospace;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f1217;
+      --surface: #171b22;
+      --surface-2: #1f2530;
+      --border: #364052;
+      --text: #e6e9ef;
+      --muted: #aab2c0;
+      --accent: #7cb7ff;
+      --accent-soft: #1a2a40;
+      --danger: #ff8a80;
+      --warn: #f0c060;
+      --ok: #6fd38a;
+      --bar-danger: #e0574d;
+      --bar-warn: #d9a21f;
+      --bar-ok: #3fae63;
+      --bar-track: #2a3240;
+      --code-bg: #12161c;
+      --focus: #7cb7ff;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 16px/1.55 var(--sans);
+  }
+  a { color: var(--accent); }
+  a:hover { text-decoration-thickness: 2px; }
+  :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: 4px; }
+  .skip {
+    position: absolute; left: -9999px; top: 0;
+    background: var(--accent); color: var(--bg); padding: .5rem 1rem; z-index: 10;
+  }
+  .skip:focus { left: 1rem; top: 1rem; }
+  header, main, footer { max-width: 1100px; margin: 0 auto; padding: 0 1.25rem; }
+  header { padding-top: 2rem; }
+  h1 { font-size: clamp(1.5rem, 3.5vw, 2.1rem); line-height: 1.2; margin: 0 0 .5rem; }
+  h2 { font-size: 1.3rem; margin: 2.2rem 0 .75rem; }
+  h3 { font-size: 1.05rem; margin: 1.2rem 0 .4rem; }
+  p { margin: .5rem 0; }
+  .lede { color: var(--muted); max-width: 70ch; margin-bottom: 1rem; }
+  .privacy {
+    display: flex; gap: .6rem; align-items: flex-start;
+    border: 1px solid var(--ok); background: var(--surface);
+    border-radius: var(--radius); padding: .7rem 1rem; margin: 1rem 0 0; max-width: 70ch;
+  }
+  .privacy strong { color: var(--ok); }
+  .panel {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 1.1rem 1.2rem; margin-top: 1.25rem;
+  }
+  .grid { display: grid; gap: 1.25rem; grid-template-columns: 1fr; }
+  @media (min-width: 860px) { .grid { grid-template-columns: 1.4fr 1fr; } }
+  fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+  legend { font-weight: 650; padding: 0; margin-bottom: .5rem; }
+  .radio-row { display: flex; flex-wrap: wrap; gap: .5rem 1.25rem; margin-bottom: .9rem; }
+  .radio-row label, .stack label { display: inline-flex; gap: .45rem; align-items: center; cursor: pointer; }
+  .stack { display: grid; gap: .5rem; }
+  input[type=radio] { width: 1.1rem; height: 1.1rem; accent-color: var(--accent); margin: 0; }
+  .field-label { display: block; font-weight: 600; margin-bottom: .3rem; }
+  .pw-row { display: flex; gap: .5rem; }
+  input[type=password], input[type=text] {
+    flex: 1; min-width: 0;
+    font: 1rem var(--mono);
+    padding: .6rem .75rem;
+    color: var(--text); background: var(--bg);
+    border: 1px solid var(--border); border-radius: 8px;
+  }
+  input[type=password]:disabled, input[type=text]:disabled { opacity: .55; }
+  button {
+    font: inherit; font-weight: 600;
+    color: var(--accent); background: var(--bg);
+    border: 1px solid var(--accent); border-radius: 8px;
+    padding: .5rem .9rem; cursor: pointer;
+  }
+  button:hover { background: var(--accent-soft); }
+  button:disabled { opacity: .55; cursor: not-allowed; }
+  input[type=range] { width: 100%; accent-color: var(--accent); }
+  .hint { color: var(--muted); font-size: .9rem; margin: .35rem 0 0; }
+  .estimate {
+    margin-top: .9rem; padding: .7rem .9rem; border-radius: 8px;
+    background: var(--bg); border: 1px dashed var(--border);
+  }
+  .estimate .big { font-size: 1.15rem; font-weight: 700; }
+  .estimate ul { margin: .35rem 0 0; padding-left: 1.2rem; }
+  .estimate li { margin: .1rem 0; }
+  .caveat { font-size: .88rem; color: var(--muted); margin-top: .6rem; }
+  .sr-only {
+    position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
+  .summary { margin: 1rem 0 .5rem; font-size: 1.02rem; }
+  .table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius); }
+  table { width: 100%; border-collapse: collapse; min-width: 760px; }
+  caption { text-align: left; padding: .8rem 1rem; color: var(--muted); font-size: .9rem; caption-side: top; }
+  th, td { padding: .6rem .8rem; text-align: left; vertical-align: middle; border-top: 1px solid var(--border); }
+  thead th { background: var(--surface-2); font-size: .85rem; text-transform: uppercase; letter-spacing: .03em; border-top: 0; }
+  tbody th { font-weight: 600; }
+  td.num { font-family: var(--mono); font-size: .92rem; white-space: nowrap; }
+  .scheme-note { display: block; font-weight: 400; color: var(--muted); font-size: .82rem; }
+  tr.is-default { background: var(--accent-soft); }
+  tr.is-default th { box-shadow: inset 4px 0 0 var(--accent); }
+  .badge {
+    display: inline-block; margin-left: .35rem; padding: 0 .45rem;
+    font-size: .72rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase;
+    color: var(--bg); background: var(--accent); border-radius: 999px; vertical-align: .1em;
+  }
+  .verdict { font-weight: 650; }
+  .t-danger { color: var(--danger); }
+  .t-warn { color: var(--warn); }
+  .t-ok { color: var(--ok); }
+  .bar-cell { width: 32%; min-width: 220px; }
+  .bar-track { position: relative; height: 14px; background: var(--bar-track); border-radius: 999px; overflow: hidden; }
+  .bar-fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 999px; }
+  .b-danger { background: var(--bar-danger); }
+  .b-warn { background: var(--bar-warn); }
+  .b-ok { background: var(--bar-ok); }
+  .b-pepper {
+    background: repeating-linear-gradient(45deg, var(--bar-ok) 0 8px, transparent 8px 14px);
+    width: 100%;
+  }
+  .scale { position: relative; height: 2.1rem; font-size: .72rem; color: var(--muted); margin-top: .2rem; }
+  .scale span { position: absolute; top: 0; transform: translateX(-50%); white-space: nowrap; }
+  .scale span::before { content: ""; display: block; width: 1px; height: 6px; background: var(--muted); margin: 0 auto 2px; }
+  .scale span.first { transform: none; }
+  .scale span.first::before { margin-left: 0; }
+  .scale span.last { transform: translateX(-100%); }
+  .scale span.last::before { margin-right: 0; margin-left: auto; }
+  pre {
+    background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px;
+    padding: .9rem 1rem; overflow-x: auto; font: .9rem/1.5 var(--mono); margin: .6rem 0;
+  }
+  code { font-family: var(--mono); font-size: .92em; }
+  .cols { display: grid; gap: 0 2rem; grid-template-columns: 1fr; }
+  @media (min-width: 860px) { .cols { grid-template-columns: 1fr 1fr; } }
+  .cols section { max-width: 70ch; }
+  ol.refs { padding-left: 1.4rem; }
+  ol.refs li { margin: .45rem 0; }
+  footer {
+    margin-top: 2.5rem; padding-top: 1.2rem; padding-bottom: 2.5rem;
+    border-top: 1px solid var(--border); color: var(--muted); font-size: .9rem;
+  }
+  footer strong { color: var(--text); }
+  @media (prefers-reduced-motion: no-preference) {
+    .bar-fill { transition: width .25s ease; }
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#results">Skip to results</a>
+
+<header>
+  <h1>Masterly.Hash — password cracking playground</h1>
+  <p class="lede">
+    Suppose an attacker steals your user table and cracks it offline, with no rate limits and no lockouts.
+    How long would one password last under each storage scheme? This page compares the hashes
+    <a href="https://github.com/a7mdfre7at/Masterly.Hash">Masterly.Hash</a> 2.x writes against older and weaker options.
+  </p>
+  <p class="privacy" role="note">
+    <span><strong>Everything stays in your browser.</strong> The page makes no network requests and stores nothing.
+    You can turn off your network and it still works. Still, do not type a real password you use; try one that is like it.</span>
+  </p>
+</header>
+
+<main id="main">
+  <div class="grid">
+    <section class="panel" aria-labelledby="in-h">
+      <h2 id="in-h" style="margin-top:0">1. What is being guessed?</h2>
+      <fieldset>
+        <legend>Input mode</legend>
+        <div class="radio-row">
+          <label><input type="radio" name="mode" value="password" checked> Estimate from a password</label>
+          <label><input type="radio" name="mode" value="guesses"> Choose a guess count</label>
+        </div>
+      </fieldset>
+
+      <div id="pw-block">
+        <label class="field-label" for="pw">Password (try one that is like yours, not your real one)</label>
+        <div class="pw-row">
+          <input id="pw" type="password" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" maxlength="128" aria-describedby="pw-hint">
+          <button id="toggle" type="button" aria-pressed="false" aria-controls="pw">Show</button>
+        </div>
+        <p id="pw-hint" class="hint">Updates as you type. Nothing is sent anywhere.</p>
+        <div class="estimate" id="estimate"></div>
+        <p class="caveat"><strong>Rough estimate.</strong> Real attackers guess more cleverly (huge leaked-password lists, mangling rules,
+          Markov models). The library's <code>Masterly.Hash.Policy</code> package uses a zxcvbn-style estimator.
+          This page's model is simpler: character pool raised to the length, cut down for a list of about 50 very common passwords,
+          sequences and repeats (<code>abc</code>, <code>123</code>, <code>aaaa</code>), years, and dictionary word + digits patterns.
+          Its word list is small, so it often <em>overestimates</em> strength.</p>
+      </div>
+
+      <div id="g-block">
+        <label class="field-label" for="guesses">Guesses needed to cover the search space</label>
+        <input id="guesses" type="range" min="3" max="20" step="0.1" value="10" aria-describedby="guesses-out">
+        <p class="hint" id="guesses-out"></p>
+      </div>
+    </section>
+
+    <section class="panel" aria-labelledby="atk-h">
+      <h2 id="atk-h" style="margin-top:0">2. Who is attacking?</h2>
+      <fieldset>
+        <legend>Attacker budget</legend>
+        <div class="stack">
+          <label><input type="radio" name="budget" value="gpu1" checked> 1 consumer GPU (RTX 4090-class)</label>
+          <label><input type="radio" name="budget" value="gpu8"> 8-GPU rig</label>
+          <label><input type="radio" name="budget" value="cloud"> Cloud: $10k of rented GPUs</label>
+        </div>
+      </fieldset>
+      <p class="hint" id="budget-desc"></p>
+      <p class="hint">All speeds are <strong>approximate, order-of-magnitude</strong> figures for a single RTX 4090-class GPU.
+        See <a href="#sources">sources and derivations</a>.</p>
+    </section>
+  </div>
+
+  <h2 id="results" tabindex="-1">3. How long would it last?</h2>
+  <p class="summary" id="summary" aria-live="polite"></p>
+  <div class="table-wrap" role="region" aria-labelledby="tbl-cap" tabindex="0">
+    <table>
+      <caption id="tbl-cap">Time to find the password, per storage scheme. The expected time is the time to try half the search space.
+        Guess rates are approximate and order-of-magnitude.</caption>
+      <thead>
+        <tr>
+          <th scope="col">Storage scheme</th>
+          <th scope="col" id="col2">Attacker speed</th>
+          <th scope="col" id="col3">Expected time to crack</th>
+          <th scope="col" class="bar-cell">
+            <span id="col4">Log scale</span>
+            <div class="scale" id="scale" aria-hidden="true"></div>
+          </th>
+        </tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </div>
+
+  <div class="cols">
+    <section aria-labelledby="why-slow">
+      <h2 id="why-slow">Why slow hashes?</h2>
+      <p>MD5, SHA-1 and SHA-512 are built to be fast. That is right for checksums and wrong for passwords:
+        one GPU tries billions of guesses per second. Password hashes (PBKDF2, bcrypt, Argon2id) are slow
+        on purpose and have a tunable cost. A login that takes your server about 50–250 ms costs the attacker
+        the same work for <em>every guess</em>. The attacker's speed drops by a factor of a million or more.</p>
+    </section>
+    <section aria-labelledby="why-mem">
+      <h2 id="why-mem">Why memory-hard (Argon2id)?</h2>
+      <p>PBKDF2 and bcrypt only cost CPU time, and GPUs and ASICs have a great deal of parallel compute. Argon2id also makes every
+        guess fill and re-read a large block of memory: 64 MiB in the default profile <code>2026a</code>. The attacker then hits the
+        limits of memory size and bandwidth, which cost much more to scale than arithmetic does.
+        A 24 GB GPU holds only a few hundred 64 MiB guesses in flight at once.
+        Argon2id won the Password Hashing Competition and is specified in RFC 9106.</p>
+    </section>
+    <section aria-labelledby="why-salt">
+      <h2 id="why-salt">What salts do, and what they do not do</h2>
+      <p>A salt is a unique random value stored next to each hash. It does <strong>not</strong> slow down an attack on one
+        targeted password: the attacker reads the salt from the database and hashes guesses with it. That is why
+        "salted SHA-512" (Masterly.Hash 1.x) is barely better than plain SHA-1 in the table.</p>
+      <p>What salts <strong>do</strong> stop is precomputation and batching. Rainbow tables become useless, and each guess
+        tests one user instead of all of them. Without salts, one pass over a wordlist cracks every user who picked
+        that word, and identical passwords show up as identical hashes. Masterly.Hash always uses a 16-byte random salt.</p>
+    </section>
+    <section aria-labelledby="why-pepper">
+      <h2 id="why-pepper">What a pepper adds</h2>
+      <p>A pepper is a secret key, at least 32 bytes, that is mixed into every hash (Masterly.Hash uses HMAC-SHA256) and is
+        <strong>kept out of the database</strong>: in an environment secret, Azure Key Vault, AWS KMS or HashiCorp Vault
+        (the <code>Masterly.Hash.Pepper.*</code> packages). An attacker who has only the database dump cannot check a single guess.
+        They would first have to brute-force a 256-bit key, which is not possible.</p>
+      <p>The protection holds only while the key stays secret. If the attacker also takes over the application server or
+        the key store, the pepper is gone and the matching row above applies again. A pepper adds to a slow hash; it does not replace one.</p>
+    </section>
+  </div>
+
+  <section aria-labelledby="upgrade">
+    <h2 id="upgrade">Masterly.Hash upgrades 1.x hashes automatically on login</h2>
+    <p>You do not need a password-reset campaign. Masterly.Hash 2.x still verifies 1.x salted SHA-512 hashes. When a user logs in
+      successfully, it returns a fresh hash built with the current profile (Argon2id 64 MiB by default), and you store it:</p>
+<pre><code>// After a successful credential check:
+var result = Password.Verify(password, user.PasswordHash);
+if (result.IsMatch &amp;&amp; result.Rehash is { } fresh) user.PasswordHash = fresh;</code></pre>
+    <p class="hint">The same path moves hashes to a newer profile or a rotated pepper key. Accounts that never log in keep their old
+      hash, so plan to expire them or wrap them in a stronger hash.</p>
+  </section>
+
+  <section aria-labelledby="sources">
+    <h2 id="sources">Sources and derivations</h2>
+    <p>All figures are <strong>approximate, order-of-magnitude</strong> numbers for one RTX 4090-class GPU. Real speeds change with the
+      driver, the cracking tool version, clock speeds and the attack mode. Treat each figure as roughly "within 2–3×".</p>
+    <ol class="refs">
+      <li id="src-hashcat">hashcat v6.2.6 benchmark on an RTX 4090 (Chick3nman, public gist):
+        <a href="https://gist.github.com/Chick3nman/32e662a5bb63bc4f51b847bb422222fd">gist.github.com/Chick3nman/32e662a5bb63bc4f51b847bb422222fd</a>.
+        Mode 0 MD5 ≈ 164 GH/s (1.6×10<sup>11</sup>). Mode 100 SHA-1 ≈ 50.6 GH/s (5×10<sup>10</sup>). Mode 1700 SHA2-512 ≈ 7.5 GH/s (7×10<sup>9</sup>).</li>
+      <li>Masterly.Hash 1.x computes a single SHA-512 over password + random salt. Salted single-pass SHA-512 (hashcat mode 1710) runs at
+        about raw SHA-512 speed, so this page uses ≈ 7×10<sup>9</sup> H/s.</li>
+      <li><strong>PBKDF2-HMAC-SHA512, 210,000 iterations</strong> (derived): hashcat mode 12100 benchmarks at ≈ 3.12 MH/s with 999 iterations.
+        The cost grows linearly with the iteration count: 3.12×10<sup>6</sup> × 999 / 210,000 ≈ <strong>1.5×10<sup>4</sup> H/s</strong>.</li>
+      <li><strong>bcrypt</strong> (derived): hashcat mode 3200 benchmarks at ≈ 184 kH/s at cost 5 (2<sup>5</sup> = 32 rounds).
+        Each extra cost step doubles the work, so the rate is 1.84×10<sup>5</sup> / 2<sup>(cost−5)</sup>.
+        Cost 10 ≈ <strong>5.8×10<sup>3</sup> H/s</strong>. Cost 12 ≈ <strong>1.4×10<sup>3</sup> H/s</strong>.</li>
+      <li><strong>Argon2id</strong> (estimated): GPU speed for Argon2 is limited by memory bandwidth and capacity, and published numbers
+        <em>vary widely by implementation</em>. A rough upper bound: each guess moves about 3 KiB of memory per 1 KiB block, per pass.
+        For 64 MiB with t=3 that is ≈ 0.6 GB per guess. At ≈ 1 TB/s that allows at most ≈ 1,700 guesses/s, so this page uses
+        <strong>≈ 1×10<sup>3</sup> H/s</strong>. For 19 MiB with t=2 (≈ 0.12 GB per guess) the bound is ≈ 8,700/s, and this page uses
+        <strong>≈ 5×10<sup>3</sup> H/s</strong>. Parameters follow
+        <a href="https://www.rfc-editor.org/rfc/rfc9106">RFC 9106</a> (§4: second recommended option, 64 MiB, t=3; Masterly.Hash uses p=1)
+        and the <a href="https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html">OWASP Password Storage Cheat Sheet</a>
+        (minimum Argon2id m=19 MiB, t=2, p=1; PBKDF2-HMAC-SHA512 at 210,000 iterations; bcrypt cost ≥ 10).</li>
+      <li><strong>Attacker budgets.</strong> The 8-GPU rig is 8 times the single-GPU rate, assuming perfect scaling.
+        For the cloud budget this page assumes about <strong>$1 per GPU-hour</strong> for a 4090-class card, so $10,000 ≈ 10,000 GPU-hours
+        ≈ 3.6×10<sup>7</sup> GPU-seconds. The page then shows the total number of guesses that budget buys, not a time.</li>
+      <li><strong>Guess estimator.</strong> This is a simplified pattern model in the spirit of zxcvbn (D. Wheeler,
+        <a href="https://www.usenix.org/conference/usenixsecurity16/technical-sessions/presentation/wheeler">"zxcvbn: Low-Budget Password Strength Estimation"</a>, USENIX Security 2016).
+        It splits the password into tokens: common password, dictionary word (assumed to sit among the top ~10,000 words), repeat, sequence,
+        year, and leftover characters at their character-class pool size. It multiplies the token costs, applies a small ordering factor,
+        and keeps the result only if it is lower than plain brute force. The expected time to crack is half the guesses divided by the attacker's rate.</li>
+    </ol>
+  </section>
+</main>
+
+<footer>
+  <p><strong>Disclaimer.</strong> This is an educational estimate, not a security guarantee. Every figure is approximate and
+    order-of-magnitude. Real attacks can be much faster: better wordlists, rules, leaked passwords from other sites, newer hardware.
+    Do not type a password you really use, even though nothing leaves this page.</p>
+  <p>Part of the <a href="https://github.com/a7mdfre7at/Masterly.Hash">Masterly.Hash</a> documentation. The page is self-contained: no scripts, fonts or data are loaded from anywhere.</p>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ------------------------------------------------------------------ *
+   * Data
+   * ------------------------------------------------------------------ */
+
+  // Ranked roughly by frequency in public leak analyses. Index + 1 = rank.
+  var COMMON = [
+    "123456", "password", "123456789", "12345678", "12345", "qwerty", "1234567", "111111",
+    "1234567890", "123123", "abc123", "1234", "password1", "iloveyou", "1q2w3e4r", "000000",
+    "qwerty123", "zaq12wsx", "dragon", "sunshine", "princess", "letmein", "654321", "monkey",
+    "1qaz2wsx", "123321", "qwertyuiop", "superman", "asdfghjkl", "football", "baseball", "welcome",
+    "admin", "master", "shadow", "michael", "666666", "121212", "trustno1", "login",
+    "starwars", "passw0rd", "hello", "freedom", "whatever", "qazwsx", "ninja", "mustang",
+    "access", "charlie", "batman", "jordan", "hunter2", "welcome1", "admin123", "changeme"
+  ];
+  var COMMON_RANK = Object.create(null);
+  COMMON.forEach(function (w, i) { if (!(w in COMMON_RANK)) COMMON_RANK[w] = i + 1; });
+
+  // Small embedded dictionary of very common words / names / keyboard walks.
+  var WORDS = (
+    "love hello summer winter spring autumn secret money angel flower happy family blue red green black white " +
+    "orange purple yellow apple banana cookie chocolate coffee pepper tiger lion eagle bear wolf cat dog puppy " +
+    "kitty soccer hockey tennis golf music guitar rock star sun moon sky ocean river mountain forest house home " +
+    "world earth fire water snow rain storm thunder magic dream heaven jesus god christ baby mother father " +
+    "sister brother friend lover honey sweet cherry peach lemon matrix killer hacker computer internet google " +
+    "facebook linux windows samsung ferrari porsche london paris berlin tokyo america canada india china mexico " +
+    "ahmad ahmed mohammad mohammed omar ali john david james robert daniel thomas jessica jennifer ashley sarah " +
+    "emma olivia anna maria alex chris test user guest root system server company office school college " +
+    "january february march april june july august september october november december monday tuesday " +
+    "wednesday thursday friday saturday sunday correct horse battery staple cool super power energy change " +
+    "default pass word qwerty asdf zxcv qwer asdfgh zxcvbn qaz wsx princess dragon monkey master shadow " +
+    "football baseball welcome admin letmein sunshine superman batman starwars freedom whatever charlie " +
+    "access ninja mustang hunter jordan michael trust login iloveyou monkey soccer purple diamond silver gold " +
+    "king queen prince knight pirate ranger rocket spider ghost zombie lucky smile beauty pretty"
+  ).split(/\s+/).filter(function (w) { return w.length >= 3; });
+  var WORDSET = Object.create(null);
+  WORDS.forEach(function (w) { WORDSET[w] = true; });
+  var WORD_RANK_COST = 1e4; // assume a dictionary word sits within the attacker's top ~10k words
+
+  var LEET = { "4": "a", "@": "a", "3": "e", "1": "i", "!": "i", "0": "o", "5": "s", "$": "s", "7": "t", "8": "b", "9": "g", "|": "l", "+": "t" };
+
+  var GPU_HOUR_USD = 1;
+  var CLOUD_BUDGET_USD = 10000;
+  var CLOUD_GPU_SECONDS = (CLOUD_BUDGET_USD / GPU_HOUR_USD) * 3600; // 3.6e7
+  var AGE_OF_UNIVERSE_S = 13.8e9 * 365.25 * 86400; // ~4.35e17 s
+  var WORLD_GDP_USD = 1e14; // ~ $100 trillion
+
+  var SCHEMES = [
+    { id: "v1", name: "Masterly.Hash 1.x (salted SHA-512)", note: "Single SHA-512 pass; salt is public", rate: 7e9 },
+    { id: "md5", name: "Unsalted MD5", note: "Fast hash, no salt (rainbow tables too)", rate: 1.6e11 },
+    { id: "sha1", name: "SHA-1", note: "Fast hash", rate: 5e10 },
+    { id: "pbkdf2", name: "PBKDF2-SHA512 210k (profile 2026f)", note: "FIPS-friendly profile; derived figure", rate: 1.5e4 },
+    { id: "bc10", name: "bcrypt cost 10", note: "Derived from cost-5 benchmark", rate: 184000 / Math.pow(2, 10 - 5) },
+    { id: "bc12", name: "bcrypt cost 12", note: "Derived from cost-5 benchmark", rate: 184000 / Math.pow(2, 12 - 5) },
+    { id: "a2c", name: "Argon2id 19 MiB t=2 (profile 2026c)", note: "Constrained profile (OWASP minimum)", rate: 5e3 },
+    { id: "a2a", name: "Argon2id 64 MiB t=3 (profile 2026a, default)", note: "Masterly.Hash v2 default", rate: 1e3, isDefault: true },
+    { id: "pepper", name: "Any of the above + pepper kept outside the database", note: "HMAC-SHA256 key held in a secret store / KMS", rate: null }
+  ];
+
+  var BUDGETS = {
+    gpu1: { label: "1 consumer GPU (RTX 4090-class)", gpus: 1, desc: "One gaming GPU running around the clock." },
+    gpu8: { label: "8-GPU rig", gpus: 8, desc: "Eight 4090-class GPUs in one machine (8× the single-GPU rate)." },
+    cloud: { label: "Cloud: $10k of rented GPUs", gpus: null,
+      desc: "About $1 per GPU-hour, so $10,000 buys ≈ 10,000 GPU-hours. Shown as a total guess budget and a chance of success, not as a time." }
+  };
+
+  /* ------------------------------------------------------------------ *
+   * Pure functions (no DOM)
+   * ------------------------------------------------------------------ */
+
+  function log10(x) { return Math.log(x) / Math.LN10; }
+
+  function charClass(ch) {
+    if (ch >= "a" && ch <= "z") return "lower";
+    if (ch >= "A" && ch <= "Z") return "upper";
+    if (ch >= "0" && ch <= "9") return "digit";
+    var c = ch.charCodeAt(0);
+    if (c >= 32 && c < 127) return "symbol";
+    return "other";
+  }
+  var CLASS_POOL = { lower: 26, upper: 26, digit: 10, symbol: 33, other: 100 };
+
+  function poolOf(chars) {
+    var seen = {}, pool = 0;
+    for (var i = 0; i < chars.length; i++) {
+      var k = charClass(chars[i]);
+      if (!seen[k]) { seen[k] = true; pool += CLASS_POOL[k]; }
+    }
+    return pool;
+  }
+
+  function log10Factorial(n) {
+    var s = 0;
+    for (var i = 2; i <= n; i++) s += log10(i);
+    return s;
+  }
+
+  // Case cost of a matched word: all lower 1, all upper or first-capital 2, otherwise 2^(#upper).
+  function log10CaseFactor(raw) {
+    var upper = 0, letters = 0;
+    for (var i = 0; i < raw.length; i++) {
+      var k = charClass(raw[i]);
+      if (k === "upper") { upper++; letters++; } else if (k === "lower") letters++;
+    }
+    if (upper === 0) return 0;
+    if (upper === letters) return log10(2);
+    if (upper === 1 && charClass(raw[0]) === "upper") return log10(2);
+    return Math.min(upper, letters - upper) * log10(2) + log10(2);
+  }
+
+  // Try to match a token at position i. Returns { len, log10Cost, kind, detail } or null.
+  function matchAt(chars, lower, leet, i) {
+    var n = chars.length;
+    var best = null;
+
+    // 1) Common password or dictionary word (longest first), on lowercase or leet-normalised text.
+    for (var L = Math.min(n - i, 24); L >= 3; L--) {
+      var sLow = lower.slice(i, i + L).join("");
+      var sLeet = leet.slice(i, i + L).join("");
+      var hit = null, viaLeet = false;
+      if (COMMON_RANK[sLow]) hit = sLow;
+      else if (WORDSET[sLow]) hit = sLow;
+      else if (COMMON_RANK[sLeet]) { hit = sLeet; viaLeet = true; }
+      else if (WORDSET[sLeet]) { hit = sLeet; viaLeet = true; }
+      if (hit) {
+        var raw = chars.slice(i, i + L).join("");
+        var isCommon = !!COMMON_RANK[hit];
+        var cost = isCommon ? log10(COMMON_RANK[hit]) : log10(WORD_RANK_COST);
+        cost += log10CaseFactor(raw);
+        if (viaLeet) {
+          var subs = 0;
+          for (var j = i; j < i + L; j++) if (lower[j] !== leet[j]) subs++;
+          cost += Math.min(subs, 3) * log10(2);
+        }
+        // Never charge more than brute-forcing these characters.
+        cost = Math.min(cost, L * log10(poolOf(chars.slice(i, i + L))));
+        best = { len: L, log10Cost: cost, kind: isCommon ? "common" : "word",
+          detail: (isCommon ? "very common password" : "dictionary word") + " (" + L + " chars" +
+            (log10CaseFactor(raw) > 0 ? ", capitalised" : "") + (viaLeet ? ", l33t substitutions" : "") + ")" };
+        break;
+      }
+    }
+    if (best) return best;
+
+    // 2) Year 1900–2039.
+    if (i + 4 <= n) {
+      var y = chars.slice(i, i + 4).join("");
+      if (/^(19\d\d|20[0-3]\d)$/.test(y)) {
+        return { len: 4, log10Cost: log10(140), kind: "year", detail: "year-like number (4 digits)" };
+      }
+    }
+
+    // 3) Repeats: a block of 1–4 chars repeated (aaaa, abab, 123123).
+    for (var b = 1; b <= 4; b++) {
+      if (i + b > n) break;
+      var reps = 1;
+      while (i + (reps + 1) * b <= n) {
+        var same = true;
+        for (var k = 0; k < b; k++) {
+          if (chars[i + reps * b + k] !== chars[i + k]) { same = false; break; }
+        }
+        if (!same) break;
+        reps++;
+      }
+      var minReps = b === 1 ? 3 : 2;
+      if (reps >= minReps) {
+        var block = chars.slice(i, i + b);
+        var c2 = b * log10(poolOf(block)) + log10(reps);
+        return { len: b * reps, log10Cost: c2, kind: "repeat", detail: "repeated characters (" + (b * reps) + " chars)" };
+      }
+    }
+
+    // 4) Sequences: abc, 123, zyx, 987 (same class, step +1 or -1, length >= 3).
+    if (i + 3 <= n) {
+      var cls = charClass(chars[i]);
+      if (cls === "lower" || cls === "upper" || cls === "digit") {
+        var d = chars[i + 1].charCodeAt(0) - chars[i].charCodeAt(0);
+        if ((d === 1 || d === -1) && charClass(chars[i + 1]) === cls) {
+          var e = i + 1;
+          while (e + 1 < n && charClass(chars[e + 1]) === cls && chars[e + 1].charCodeAt(0) - chars[e].charCodeAt(0) === d) e++;
+          var sl = e - i + 1;
+          if (sl >= 3) {
+            var start = chars[i].toLowerCase();
+            var base = (start === "a" || start === "z" || start === "0" || start === "1" || start === "9") ? 4 : CLASS_POOL[cls];
+            var c3 = log10(base) + log10(sl) + (d === -1 ? log10(2) : 0);
+            return { len: sl, log10Cost: c3, kind: "sequence", detail: "sequence (" + sl + " chars)" };
+          }
+        }
+      }
+    }
+    return null;
+  }
+
+  // Estimate guesses for a password. Returns { log10Guesses, bits, length, pool, patterns[] }.
+  function estimate(password) {
+    var chars = Array.from(password); // code points, not UTF-16 units
+    var n = chars.length;
+    if (n === 0) return null;
+    var pool = poolOf(chars);
+    var bruteLog = n * log10(pool);
+
+    var lower = chars.map(function (c) { return c.toLowerCase(); });
+    var leet = lower.map(function (c) { return LEET[c] || c; });
+
+    // Whole-password check against the common list (exact, case-insensitive, leet).
+    var whole = lower.join(""), wholeLeet = leet.join("");
+    var rank = COMMON_RANK[whole] || COMMON_RANK[wholeLeet];
+    if (rank) {
+      var extra = (password === whole ? 0 : log10(2)) + (COMMON_RANK[whole] ? 0 : log10(4));
+      var lg = Math.min(bruteLog, log10(rank) + extra);
+      return { log10Guesses: lg, bits: lg / log10(2), length: n, pool: pool,
+        patterns: ["in the top ~50 most common passwords (#" + rank + ")" + (extra > 0 ? ", with case/l33t changes" : "")] };
+    }
+
+    var tokens = [];
+    var pending = []; // leftover characters
+    function flush() {
+      if (pending.length) {
+        tokens.push({ log10Cost: pending.length * log10(poolOf(pending)), kind: "brute",
+          detail: "other characters (" + pending.length + ", pool " + poolOf(pending) + ")" });
+        pending = [];
+      }
+    }
+    var i = 0;
+    while (i < n) {
+      var m = matchAt(chars, lower, leet, i);
+      if (m) { flush(); tokens.push(m); i += m.len; }
+      else { pending.push(chars[i]); i++; }
+    }
+    flush();
+
+    var structured = 0;
+    tokens.forEach(function (t) { structured += t.log10Cost; });
+    if (tokens.length > 1) structured += log10Factorial(tokens.length); // the attacker does not know the pattern order
+
+    var hasPattern = tokens.some(function (t) { return t.kind !== "brute"; });
+    var lg2, patterns;
+    if (hasPattern && structured < bruteLog) {
+      lg2 = structured;
+      patterns = tokens.map(function (t) { return t.detail; });
+    } else {
+      lg2 = bruteLog;
+      patterns = ["no known patterns found, so brute force over a pool of " + pool + " characters"];
+    }
+    lg2 = Math.max(0, lg2);
+    return { log10Guesses: lg2, bits: lg2 / log10(2), length: n, pool: pool, patterns: patterns };
+  }
+
+  function fmtNum(x, digits) {
+    var d = digits == null ? 2 : digits;
+    var s = x.toPrecision(d);
+    if (s.indexOf("e") >= 0) s = String(Number(s));
+    return s;
+  }
+
+  // Split x into a mantissa string and exponent for "m × 10^e" display; small values are returned plainly.
+  function sciParts(x) {
+    if (!isFinite(x)) return { plain: "∞" };
+    if (x === 0) return { plain: "0" };
+    if (x < 1e4 && x >= 1) return { plain: Math.round(x).toLocaleString("en-US") };
+    if (x < 1 && x >= 0.01) return { plain: fmtNum(x, 2) };
+    var e = Math.floor(log10(x));
+    var m = x / Math.pow(10, e);
+    if (m >= 9.95) { m = 1; e += 1; }
+    var ms = m.toFixed(1).replace(/\.0$/, "");
+    return { mant: ms, exp: e };
+  }
+  function sciText(x) {
+    var p = sciParts(x);
+    if (p.plain != null) return p.plain;
+    return (p.mant === "1" ? "" : p.mant + " × ") + "10^" + p.exp;
+  }
+
+  var YEAR = 365.25 * 86400;
+  function plural(v, unit) {
+    var s = v < 10 ? v.toFixed(1).replace(/\.0$/, "") : Math.round(v).toLocaleString("en-US");
+    return s + " " + unit + (s === "1" ? "" : "s");
+  }
+  function humanTime(sec) {
+    if (!isFinite(sec) || sec > AGE_OF_UNIVERSE_S) return "longer than the age of the universe";
+    if (sec < 1e-3) return "instant";
+    if (sec < 1) return "under a second";
+    if (sec < 60) return plural(sec, "second");
+    if (sec < 3600) return plural(sec / 60, "minute");
+    if (sec < 86400) return plural(sec / 3600, "hour");
+    if (sec < 30.44 * 86400) return plural(sec / 86400, "day");
+    if (sec < YEAR) return plural(sec / (30.44 * 86400), "month");
+    var y = sec / YEAR;
+    if (y < 1e3) return plural(y, "year");
+    if (y < 1e6) return (y / 1e3 < 10 ? (y / 1e3).toFixed(1).replace(/\.0$/, "") : Math.round(y / 1e3)) + " thousand years";
+    if (y < 1e9) return (y / 1e6 < 10 ? (y / 1e6).toFixed(1).replace(/\.0$/, "") : Math.round(y / 1e6)) + " million years";
+    return (y / 1e9).toFixed(1).replace(/\.0$/, "") + " billion years";
+  }
+  function severity(sec) {
+    if (sec < 86400) return "danger";
+    if (sec < 100 * YEAR) return "warn";
+    return "ok";
+  }
+
+  // Time bar: log10(seconds) from -3 (1 ms) to 18.5 (beyond the age of the universe).
+  var T_MIN = -3, T_MAX = 18.5;
+  function timePct(sec) {
+    if (!isFinite(sec)) return 100;
+    var l = sec > 0 ? log10(sec) : T_MIN;
+    var p = (l - T_MIN) / (T_MAX - T_MIN) * 100;
+    return Math.max(1.5, Math.min(100, p));
+  }
+  // Chance bar: log10(probability) from -12 to 0.
+  var P_MIN = -12;
+  function chancePct(p) {
+    if (p <= 0) return 1.5;
+    var l = log10(p);
+    return Math.max(1.5, Math.min(100, (l - P_MIN) / (0 - P_MIN) * 100));
+  }
+  function fmtPercent(p) {
+    if (p >= 1) return "100% (cracked)";
+    var pct = p * 100;
+    if (pct >= 1) return pct.toFixed(pct >= 10 ? 0 : 1) + "%";
+    if (pct >= 0.01) return pct.toFixed(2) + "%";
+    return "about " + sciText(pct) + "%";
+  }
+  function fmtMoney(usd) {
+    if (usd < 0.01) return "under 1 cent";
+    if (usd < 1) return Math.round(usd * 100) + " cents";
+    if (usd < 1e6) return "$" + Math.round(usd).toLocaleString("en-US");
+    return "$" + sciText(usd) + (usd > WORLD_GDP_USD ? " (more than world annual GDP)" : "");
+  }
+
+  // Per-row computation. logGuesses = log10 of search-space size.
+  function computeRow(scheme, budgetKey, logGuesses) {
+    if (scheme.rate == null) return { pepper: true };
+    var expected = Math.pow(10, logGuesses) / 2; // half the search space on average
+    if (expected < 1) expected = 1;
+    if (budgetKey === "cloud") {
+      var budgetGuesses = scheme.rate * CLOUD_GPU_SECONDS;
+      var space = Math.pow(10, logGuesses);
+      var chance = Math.min(1, budgetGuesses / Math.max(1, space));
+      var gpuHours = expected / scheme.rate / 3600;
+      var cost = gpuHours * GPU_HOUR_USD;
+      return { cloud: true, budgetGuesses: budgetGuesses, chance: chance, cost: cost,
+        sev: chance >= 0.5 ? "danger" : (chance >= 1e-3 ? "warn" : "ok") };
+    }
+    var rate = scheme.rate * BUDGETS[budgetKey].gpus;
+    var sec = expected / rate;
+    return { rate: rate, seconds: sec, sev: severity(sec) };
+  }
+
+  var api = { estimate: estimate, humanTime: humanTime, computeRow: computeRow, sciText: sciText,
+    fmtMoney: fmtMoney, fmtPercent: fmtPercent, SCHEMES: SCHEMES, timePct: timePct, chancePct: chancePct };
+  if (typeof module !== "undefined" && module.exports) module.exports = api;
+  if (typeof document === "undefined") return;
+
+  /* ------------------------------------------------------------------ *
+   * DOM
+   * ------------------------------------------------------------------ */
+
+  function $(id) { return document.getElementById(id); }
+  function el(tag, cls, text) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  }
+  function sciNode(x) {
+    var p = sciParts(x);
+    var span = el("span");
+    if (p.plain != null) { span.textContent = p.plain; return span; }
+    span.appendChild(document.createTextNode((p.mant === "1" ? "" : p.mant + " × ") + "10"));
+    span.appendChild(el("sup", null, String(p.exp)));
+    return span;
+  }
+
+  var pw = $("pw"), toggle = $("toggle"), slider = $("guesses");
+
+  function currentMode() {
+    var r = document.querySelector('input[name="mode"]:checked');
+    return r ? r.value : "password";
+  }
+  function currentBudget() {
+    var r = document.querySelector('input[name="budget"]:checked');
+    return r ? r.value : "gpu1";
+  }
+
+  function renderScale(budgetKey) {
+    var scale = $("scale");
+    while (scale.firstChild) scale.removeChild(scale.firstChild);
+    var ticks;
+    if (budgetKey === "cloud") {
+      ticks = [[-12, "10⁻¹⁰%"], [-6, "0.0001%"], [-2, "1%"], [0, "100%"]];
+      ticks = ticks.map(function (t) { return [(t[0] - P_MIN) / (0 - P_MIN) * 100, t[1]]; });
+    } else {
+      ticks = [[-3, "1 ms"], [log10(86400), "1 day"], [log10(1000 * YEAR), "1,000 yr"], [log10(AGE_OF_UNIVERSE_S), "universe"]];
+      ticks = ticks.map(function (t) { return [(t[0] - T_MIN) / (T_MAX - T_MIN) * 100, t[1]]; });
+    }
+    ticks.forEach(function (t, idx) {
+      var s = el("span", idx === 0 ? "first" : (idx === ticks.length - 1 && t[0] > 97 ? "last" : null), t[1]);
+      s.style.left = t[0] + "%";
+      scale.appendChild(s);
+    });
+  }
+
+  function render() {
+    var mode = currentMode();
+    var budgetKey = currentBudget();
+    var isCloud = budgetKey === "cloud";
+
+    pw.disabled = mode !== "password";
+    toggle.disabled = mode !== "password";
+    slider.disabled = mode !== "guesses";
+
+    // Slider readout (always shown).
+    var sv = parseFloat(slider.value);
+    var sliderText = "10 to the power " + sv.toFixed(1) + " guesses (about " + Math.round(sv / log10(2)) + " bits)";
+    $("guesses-out").textContent = "";
+    $("guesses-out").appendChild(sciNode(Math.pow(10, sv)));
+    $("guesses-out").appendChild(document.createTextNode(" guesses (about " + Math.round(sv / log10(2)) + " bits of entropy)"));
+    slider.setAttribute("aria-valuetext", sliderText);
+
+    // Password estimate box.
+    var est = $("estimate");
+    while (est.firstChild) est.removeChild(est.firstChild);
+    var logGuesses = null;
+    if (mode === "password") {
+      var r = estimate(pw.value);
+      if (!r) {
+        est.appendChild(el("p", null, "Type a password above to estimate how many guesses it would take."));
+      } else {
+        logGuesses = r.log10Guesses;
+        var big = el("p", "big");
+        big.appendChild(document.createTextNode("≈ "));
+        big.appendChild(sciNode(Math.pow(10, r.log10Guesses)));
+        big.appendChild(document.createTextNode(" guesses (about " + Math.round(r.bits) + " bits)"));
+        est.appendChild(big);
+        est.appendChild(el("p", "hint", r.length + " characters, pool of " + r.pool + " possible characters. Patterns found:"));
+        var ul = el("ul");
+        r.patterns.forEach(function (p) { ul.appendChild(el("li", null, p)); });
+        est.appendChild(ul);
+      }
+    } else {
+      logGuesses = sv;
+      est.appendChild(el("p", null, "Using the guess count chosen below."));
+    }
+
+    $("budget-desc").textContent = BUDGETS[budgetKey].desc;
+    $("col2").textContent = isCloud ? "Guesses $10k buys" : "Attacker speed (guesses/s)";
+    $("col3").textContent = isCloud ? "Chance of success / expected cost" : "Expected time to crack";
+    $("col4").textContent = isCloud ? "Chance within $10k (log scale)" : "Time (log scale)";
+    renderScale(budgetKey);
+
+    var tbody = $("rows");
+    while (tbody.firstChild) tbody.removeChild(tbody.firstChild);
+    var results = {};
+
+    SCHEMES.forEach(function (s) {
+      var tr = el("tr", s.isDefault ? "is-default" : null);
+      var th = el("th");
+      th.setAttribute("scope", "row");
+      th.appendChild(document.createTextNode(s.name));
+      if (s.isDefault) th.appendChild(el("span", "badge", "v2 default"));
+      th.appendChild(el("span", "scheme-note", s.note));
+      tr.appendChild(th);
+
+      var td2 = el("td", "num"), td3 = el("td"), td4 = el("td", "bar-cell");
+      var track = el("div", "bar-track");
+      track.setAttribute("aria-hidden", "true");
+      var fill = el("div", "bar-fill");
+      track.appendChild(fill);
+      td4.appendChild(track);
+
+      if (s.rate == null) {
+        td2.textContent = "n/a";
+        var v = el("span", "verdict t-ok", "Not crackable from the database alone");
+        td3.appendChild(v);
+        td3.appendChild(el("span", "scheme-note",
+          "Without the secret key no guess can be checked. If the key also leaks, the row it is added to applies."));
+        fill.className = "bar-fill b-pepper";
+        fill.style.width = "100%";
+      } else if (logGuesses == null) {
+        td2.appendChild(isCloud ? sciNode(s.rate * CLOUD_GPU_SECONDS) : sciNode(s.rate * BUDGETS[budgetKey].gpus));
+        td3.textContent = "—";
+        fill.style.width = "0%";
+      } else {
+        var c = computeRow(s, budgetKey, logGuesses);
+        results[s.id] = c;
+        if (c.cloud) {
+          td2.appendChild(sciNode(c.budgetGuesses));
+          var vv = el("span", "verdict t-" + c.sev, fmtPercent(c.chance));
+          td3.appendChild(vv);
+          td3.appendChild(el("span", "scheme-note", "Expected cost to crack: " + fmtMoney(c.cost)));
+          fill.className = "bar-fill b-" + c.sev;
+          fill.style.width = chancePct(c.chance) + "%";
+        } else {
+          td2.appendChild(sciNode(c.rate));
+          td3.appendChild(el("span", "verdict t-" + c.sev, humanTime(c.seconds)));
+          fill.className = "bar-fill b-" + c.sev;
+          fill.style.width = timePct(c.seconds) + "%";
+        }
+      }
+      tr.appendChild(td2); tr.appendChild(td3); tr.appendChild(td4);
+      tbody.appendChild(tr);
+    });
+
+    scheduleSummary(results, budgetKey, logGuesses);
+  }
+
+  var summaryTimer = null;
+  function scheduleSummary(results, budgetKey, logGuesses) {
+    if (summaryTimer) clearTimeout(summaryTimer);
+    summaryTimer = setTimeout(function () {
+      var out = $("summary");
+      if (logGuesses == null || !results.a2a || !results.v1) {
+        out.textContent = "Enter a password or choose a guess count to compare the schemes.";
+        return;
+      }
+      var who = BUDGETS[budgetKey].label;
+      var lead = "Search space ≈ " + sciText(Math.pow(10, logGuesses)) + " guesses. ";
+      if (budgetKey === "cloud") {
+        out.textContent = lead + "With " + who + ": the v2 default (Argon2id 64 MiB) gives the attacker a " + fmtPercent(results.a2a.chance) +
+          " chance (expected cost " + fmtMoney(results.a2a.cost) + "). Masterly.Hash 1.x salted SHA-512 gives " +
+          fmtPercent(results.v1.chance) + " (expected cost " + fmtMoney(results.v1.cost) + ").";
+      } else {
+        out.textContent = lead + "With " + who + ": the v2 default (Argon2id 64 MiB) holds for " + humanTime(results.a2a.seconds) +
+          ". Masterly.Hash 1.x salted SHA-512 holds for " + humanTime(results.v1.seconds) +
+          ". Unsalted MD5 holds for " + humanTime(results.md5.seconds) + ".";
+      }
+    }, 350);
+  }
+
+  toggle.addEventListener("click", function () {
+    var show = pw.type === "password";
+    pw.type = show ? "text" : "password";
+    toggle.textContent = show ? "Hide" : "Show";
+    toggle.setAttribute("aria-pressed", show ? "true" : "false");
+    toggle.setAttribute("aria-label", show ? "Hide password" : "Show password");
+    pw.focus();
+  });
+  toggle.setAttribute("aria-label", "Show password");
+  pw.addEventListener("input", render);
+  slider.addEventListener("input", render);
+  Array.prototype.forEach.call(document.querySelectorAll('input[name="mode"], input[name="budget"]'), function (r) {
+    r.addEventListener("change", render);
+  });
+  // Clear the field when the page is hidden or restored from cache.
+  window.addEventListener("pageshow", function () { pw.value = ""; render(); });
+  render();
+})();
+</script>
+</body>
+</html>

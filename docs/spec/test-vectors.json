@@ -1,0 +1,76 @@
+{
+  "format": "Masterly.Hash $mh$ test vectors",
+  "version": 1,
+  "generatedBy": "Masterly.Hash 2.0.0 HashPrimitives.DeriveKey; every vector verified with PasswordHasher.Verify",
+  "vectors": [
+    {
+      "name": "argon2id-default",
+      "note": "Profile 2026a: Argon2id v1.3, m=65536 KiB, t=3, p=1, 32-byte tag. No secret/associated data.",
+      "password": "correct horse battery staple",
+      "passwordUtf16": "0063 006F 0072 0072 0065 0063 0074 0020 0068 006F 0072 0073 0065 0020 0062 0061 0074 0074 0065 0072 0079 0020 0073 0074 0061 0070 006C 0065",
+      "kdfInputHex": "636f727265637420686f727365206261747465727920737461706c65",
+      "profile": "2026a",
+      "saltHex": "000102030405060708090a0b0c0d0e0f",
+      "tagHex": "0d1a3c6523c8f06e4e0af9c515aa5b5448cfebd6838f2d52c3d8b6ef8ddc3c2e",
+      "hash": "$mh$p=2026a$AAECAwQFBgcICQoLDA0ODw$DRo8ZSPI8G5OCvnFFapbVEjP69aDjy1Sw9i2743cPC4"
+    },
+    {
+      "name": "argon2id-constrained",
+      "note": "Profile 2026c: Argon2id v1.3, m=19456 KiB, t=2, p=1.",
+      "password": "correct horse battery staple",
+      "passwordUtf16": "0063 006F 0072 0072 0065 0063 0074 0020 0068 006F 0072 0073 0065 0020 0062 0061 0074 0074 0065 0072 0079 0020 0073 0074 0061 0070 006C 0065",
+      "kdfInputHex": "636f727265637420686f727365206261747465727920737461706c65",
+      "profile": "2026c",
+      "saltHex": "000102030405060708090a0b0c0d0e0f",
+      "tagHex": "818259b6310026a8e0dbac5d2e6927abcfdb07b32258fac4f61b18b80f929085",
+      "hash": "$mh$p=2026c$AAECAwQFBgcICQoLDA0ODw$gYJZtjEAJqjg26xdLmknq8/bB7MiWPrE9hsYuA+SkIU"
+    },
+    {
+      "name": "pbkdf2-fips",
+      "note": "Profile 2026f: PBKDF2-HMAC-SHA512, 210000 iterations, 64-byte tag.",
+      "password": "correct horse battery staple",
+      "passwordUtf16": "0063 006F 0072 0072 0065 0063 0074 0020 0068 006F 0072 0073 0065 0020 0062 0061 0074 0074 0065 0072 0079 0020 0073 0074 0061 0070 006C 0065",
+      "kdfInputHex": "636f727265637420686f727365206261747465727920737461706c65",
+      "profile": "2026f",
+      "saltHex": "000102030405060708090a0b0c0d0e0f",
+      "tagHex": "b5f3fa7459cc14b9bce1eac5142fe1583cdbe9f02300f080b3446f24b8aee716077de94f05300400380b551809cd9f1b2afbd4a56da7504c446c00db89ecee3e",
+      "hash": "$mh$p=2026f$AAECAwQFBgcICQoLDA0ODw$tfP6dFnMFLm84erFFC/hWDzb6fAjAPCAs0RvJLiu5xYHfelPBTAEADgLVRgJzZ8bKvvUpW2nUExEbADbiezuPg"
+    },
+    {
+      "name": "nfkc-normalization",
+      "note": "Input is UTF-8 of NFKC(password): 'fiA2 Café' with precomposed é. Verifies for any NFKC-equivalent spelling.",
+      "password": "ﬁＡ² Café",
+      "passwordUtf16": "FB01 FF21 00B2 0020 0043 0061 0066 0065 0301",
+      "kdfInputHex": "6669413220436166c3a9",
+      "profile": "2026c",
+      "saltHex": "101112131415161718191a1b1c1d1e1f",
+      "tagHex": "0aa9454e4dc2929460849be91a289be999fce39c57c43ccf1e7cf8233aa0e9a7",
+      "hash": "$mh$p=2026c$EBESExQVFhcYGRobHB0eHw$CqlFTk3CkpRghJvpGiib6Zn845xXxDzPHnz4Izqg6ac"
+    },
+    {
+      "name": "pepper-hmac",
+      "note": "KDF input = HMAC-SHA256(pepperKey, UTF-8(NFKC(password))). pepperKey = bytes 0x40..0x5f (32 bytes), id k1.",
+      "password": "correct horse battery staple",
+      "passwordUtf16": "0063 006F 0072 0072 0065 0063 0074 0020 0068 006F 0072 0073 0065 0020 0062 0061 0074 0074 0065 0072 0079 0020 0073 0074 0061 0070 006C 0065",
+      "kdfInputHex": "0672143a1273500a3f986f4517ccd9d78d62e4f3fd97e4d7561f69bb1e07731f",
+      "profile": "2026a",
+      "saltHex": "202122232425262728292a2b2c2d2e2f",
+      "pepperKeyId": "k1",
+      "tagHex": "20cf1bbb59c977f2aa3e04bb8699f4c09365bda08a709470500bf72e38574147",
+      "hash": "$mh$p=2026a,k=k1$ICEiIyQlJicoKSorLC0uLw$IM8bu1nJd/KqPgS7hpn0wJNlvaCKcJRwUAv3LjhXQUc"
+    },
+    {
+      "name": "onion-wrapped-v1",
+      "note": "Onion-wrapped Masterly 1.x SHA-256 hash. wp = algorithm byte (0=SHA256,1=SHA384,2=SHA512) || legacy salt. KDF input = SHA-256(UTF-8(password) || salt), raw password, no NFKC (as 1.x).",
+      "password": "SomePassword!@#",
+      "passwordUtf16": "0053 006F 006D 0065 0050 0061 0073 0073 0077 006F 0072 0064 0021 0040 0023",
+      "kdfInputHex": "7f4d79c3480ee5a9a967d46bba0772de05f0a575cc1284b1bc92aa6853f039f6",
+      "profile": "2026c",
+      "saltHex": "303132333435363738393a3b3c3d3e3f",
+      "wrapFormat": "v1",
+      "wrapParameterHex": "00536f6d6553616c74232425",
+      "tagHex": "234aebaba7314c38e141b1cac8b75ca159af7cf9c73167fdcbaeef622ce1a7af",
+      "hash": "$mh$p=2026c,w=v1,wp=AFNvbWVTYWx0IyQl$MDEyMzQ1Njc4OTo7PD0+Pw$I0rrq6cxTDjhQbHKyLdcoVmvfPnHMWf9y67vYizhp68"
+    }
+  ]
+}
