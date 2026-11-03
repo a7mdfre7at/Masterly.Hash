@@ -1,10 +1,11 @@
-# Masterly.Hash
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/banner-dark.svg">
+  <img alt="Masterly.Hash: password hashing you can't get wrong." src="assets/banner-light.svg" width="100%">
+</picture>
 
 **Password hashing you can't get wrong.** It takes two methods, the defaults are safe, and every hash you already have upgrades itself the next time its user logs in.
 
-<img src="https://raw.githubusercontent.com/a7mdfre7at/Masterly.Hash/master/repo_image.png" width="200" height="180">
-
-[![Nuget](https://img.shields.io/nuget/v/Masterly.Hash?style=flat-square)](https://www.nuget.org/packages/Masterly.Hash) ![Nuget](https://img.shields.io/nuget/dt/Masterly.Hash?style=flat-square) ![GitHub](https://img.shields.io/github/license/a7mdfre7at/Masterly.Hash?style=flat-square) [![Build](https://github.com/a7mdfre7at/Masterly.Hash/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/a7mdfre7at/Masterly.Hash/actions/workflows/build.yml) [![CodeQL](https://github.com/a7mdfre7at/Masterly.Hash/actions/workflows/codeql.yml/badge.svg?branch=master)](https://github.com/a7mdfre7at/Masterly.Hash/actions/workflows/codeql.yml) [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/a7mdfre7at/Masterly.Hash/badge)](https://securityscorecards.dev/viewer/?uri=github.com/a7mdfre7at/Masterly.Hash)
+[![Nuget](https://img.shields.io/nuget/v/Masterly.Hash?style=flat-square)](https://www.nuget.org/packages/Masterly.Hash) [![Documentation](https://img.shields.io/badge/docs-masterly.hash-8217D3?style=flat-square)](https://a7mdfre7at.github.io/Masterly.Hash/) ![Nuget](https://img.shields.io/nuget/dt/Masterly.Hash?style=flat-square) ![GitHub](https://img.shields.io/github/license/a7mdfre7at/Masterly.Hash?style=flat-square) [![Build](https://github.com/a7mdfre7at/Masterly.Hash/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/a7mdfre7at/Masterly.Hash/actions/workflows/build.yml) [![CodeQL](https://github.com/a7mdfre7at/Masterly.Hash/actions/workflows/codeql.yml/badge.svg?branch=master)](https://github.com/a7mdfre7at/Masterly.Hash/actions/workflows/codeql.yml) [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/a7mdfre7at/Masterly.Hash/badge)](https://securityscorecards.dev/viewer/?uri=github.com/a7mdfre7at/Masterly.Hash)
 
 ```
 dotnet add package Masterly.Hash
@@ -99,11 +100,13 @@ To use ASP.NET Core Identity, call `services.AddIdentity<AppUser, IdentityRole>(
 
 ## Documentation
 
+The full guide lives at **[a7mdfre7at.github.io/Masterly.Hash](https://a7mdfre7at.github.io/Masterly.Hash/)**: getting started, every package, migration, key management and the API reference.
+
 - [Hash format specification](docs/spec/FORMAT.md) and [test vectors](docs/spec/test-vectors.json): for writing a verifier in another language
 - [Threat model](docs/THREAT-MODEL.md): what each feature defends against, and what it doesn't
 - [Migrating from 1.x](docs/MIGRATION-1x.md)
 - [Analyzer rules](docs/analyzers)
-- [Password-cracking playground](docs/playground/index.html): how long a stolen hash survives, per scheme
+- [Password-cracking playground](https://a7mdfre7at.github.io/Masterly.Hash/playground/): how long a stolen hash survives, per scheme
 - [Security policy](SECURITY.md) · [Changelog](CHANGELOG.md)
 
 ## Building
